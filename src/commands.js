@@ -1,7 +1,7 @@
 /**
  Filename: commands.js
  AppLamp.nl led light API: wifi box byte commands
- Â© AppLamp.nl: you can share,modify and use this code (commercially) as long as you
+ © AppLamp.nl: you can share,modify and use this code (commercially) as long as you
  keep the referer "AppLamp.nl led light API" in the file header.
 
  RESPECT AT LEAST 50 MS BETWEEN EACH SEND COMMAND TO PREVENT PACKAGE LOSS
@@ -50,18 +50,22 @@ ColorRgbwCmd.prototype.off = function(zone)
 {  return [[0x41,0x46,0x48,0x4A,0x4C][zone],0x00,0x55] };
 
 /* Shortcut to ON(0) */
-ColorRgbwCmd.prototype.allOn  = function(){  this.on(0) };
-ColorRgbwCmd.prototype.allOff = function(){  this.off(0) };
+ColorRgbwCmd.prototype.allOn  = function(){  return this.on(0) };
+ColorRgbwCmd.prototype.allOff = function(){  return this.off(0) };
 
 /* Hue range 0-255 [targets last ON() activated bulb(s)] */
 ColorRgbwCmd.prototype.hue =  function(decimal)
 {
     var hex = decimal.toString(16);
-    hex = (hex.length < 2) ? '0x0'+hex : '0x'+hex;
+    hex = (hex.length < 2) ? parseInt('0x0'+hex) : parseInt('0x'+hex);
     return [0x40,hex,0x55];
-}
-/* Switch to white mode [targets last ON() activated bulb(s)] */
-ColorRgbwCmd.prototype.whiteMode = 	function(){  	return [0xC2,00,0x55] };
+};
+/* Switch to white mode use function parameter `zone` with value '0' to target ALL zones,
+ * value '1' for zone 1, value '2' for zone 2,... to 4 */
+ColorRgbwCmd.prototype.whiteMode = function(zone)
+{  return [[0xc2,0xc5,0xc7,0xc9,0xcb][zone],0x00,0x55] };
+
+//function(){  	return [0xC2,0x00,0x55] };
 /* Brightness range 1-100 [targets last ON() activated bulb(s)]*/
 ColorRgbwCmd.prototype.brightness = 	function(percent)
 { 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*19))-1 ); //19 steps
@@ -78,7 +82,65 @@ ColorRgbwCmd.prototype.effectModeNext =	function(){  return [0x4D,0x00,0x55] };
 ColorRgbwCmd.prototype.effectSpeedUp = 	function(){  return [0x44,0x00,0x55] };
 ColorRgbwCmd.prototype.effectSpeedDown= function(){  return [0x44,0x00,0x55] };
 
+/** Converts a RGB color value to HSV
+ * @see http://en.wikipedia.org/wiki/HSL_and_HSV and http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+ * @param r
+ * @param g
+ * @param b
+ * @returns {*{}}
+ */
+ColorRgbwCmd.prototype.rgbToHsv = function rgbToHsl(r, g, b) {
+    r = r / 255, g = g / 255, b = b / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h, s, v = max;
 
+    var d = max - min;
+    s = max == 0 ? 0 : d / max;
+
+    if (max == min) {
+        h = 0;
+    }
+    else {
+        switch (max) {
+            case r:
+                h = ((g - b) / d + (g < b ? 6 : 0));
+                break;
+            case g:
+                h = ((b - r) / d + 2);
+                break;
+            case b:
+                h = ((r - g) / d + 4);
+                break;
+        }
+        h = Math.round(h * 60);
+        s = Math.round(s * 100);
+        v = Math.round(v * 100);
+    }
+    //console.log([h,s,v ]);
+    return [h, s, v];
+};
+
+ColorRgbwCmd.prototype.hsvToMilightColor=  function hsvToMilightColor(hsv)
+{
+    // On the HSV color circle (0..360) with red at 0 degree. We need to convert to the Milight color circle
+    // which has 256 values with red at position 176
+    var color = (256 + 176 - Math.floor(Number(hsv[0]) / 360.0 * 255.0)) % 256;
+    return color;
+};
+
+/**
+ * Limitations: As RGBW bulbs do not support setting of saturation, hue and brightness will be.
+ * @param r
+ * @param g
+ * @param b
+ * @returns {*[]}
+ */
+ColorRgbwCmd.prototype.rgb255 =  function (r, g, b) {
+    var hsv= this.rgbToHsv(r, g, b),
+        hue= this.hue(this.hsvToMilightColor(hsv)),
+        brightness=this.brightness(hsv[2]);
+    return [hue, brightness];
+};
 
 /* DUAL WHITE BULBS & CONTROLLERS */
 
@@ -108,8 +170,7 @@ WhiteCmd.prototype.warmer = 	function(){ return [0x3E,0x00,0x55] };
 WhiteCmd.prototype.cooler = 	function(){ return [0x3F,0x00,0x55] };
 
 
-
-/* RGB BULBS & CONTROLLERS, PREVIOUS GNERATION SINGLE CHANNEL/ZONE*/
+/* RGB BULBS & CONTROLLERS, PREVIOUS GENERATION SINGLE CHANNEL/ZONE*/
 
 ColorRgbCmd.prototype.off = function(){ return [0x21,0x00,0x55] };
 ColorRgbCmd.prototype.on = function(){ return [0x22,0x00,0x55] };
@@ -125,6 +186,4 @@ ColorRgbCmd.prototype.speedUp = 	function(){ return [0x25,0x00,0x55] };
 ColorRgbCmd.prototype.speedDown = 	function(){ return [0x26,0x00,0x55] };
 ColorRgbCmd.prototype.effectSpeedUp = 	function(){ return [0x27,0x00,0x55] };
 ColorRgbCmd.prototype.effectSpeedDown = function(){ return [0x28,0x00,0x55] };
-
-
-
+ 
