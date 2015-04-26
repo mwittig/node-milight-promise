@@ -1,0 +1,28 @@
+{
+  "name": "node-milight-promise",
+  "version": "0.0.1",
+  "description": "A node module to control Milight LED bulbs and OEM equivalents auch as Rocket LED, Limitless LED Applamp, Easybulb, s`luce, iLight, iBulb, and Kreuzer",
+  "author": {
+    "name": "Marcus Wittig",
+    "url": "https://github.com/mwittig/node-milight-promise"
+  },
+  "main": "src/index",
+  "homepage": "https://github.com/mwittig/node-milight-promise",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mwittig/node-milight-promise"
+  },
+  "bugs": {
+    "url": "https://github.com/mwittig/node-milight-promise/issues"
+  },
+  "keywords": [
+    "SmartHome",
+    "Milight",
+    "WifiLight",
+    "LED"
+  ],
+  "dependencies": {
+    "bluebird": ">=2.9.24"
+  }
+}
