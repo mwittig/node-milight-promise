@@ -7,7 +7,7 @@ const
     DEFAULT_IP = '255.255.255.255',
     DEFAULT_PORT = 8899,
     DEFAULT_COMMAND_DELAY = 30,
-    DEFAULT_COMMAND_REPEAT=3;
+    DEFAULT_COMMAND_REPEAT = 3;
 
 //
 // Local helper functions
@@ -15,7 +15,7 @@ const
 
 function buffer2hex(buffer) {
     result = [];
-    for (var i = 0; i < buffer.length ; i++) {
+    for (var i = 0; i < buffer.length; i++) {
         result.push('0x' + buffer[i].toString(16))
     }
     return result;
@@ -72,7 +72,7 @@ MilightController.prototype._createSocket = function () {
                 var socket = dgram.createSocket('udp4');
 
                 if (self._broadcastMode) {
-                    socket.bind(function() {
+                    socket.bind(function () {
                         socket.setBroadcast(true);
                         self.clientSocket = socket;
                         debug("Milight: Initializing Socket (broadcast mode) completed");
@@ -100,7 +100,7 @@ MilightController.prototype._sendThreeByteArray = function (threeByteArray) {
     return self._sendRequest = Promise.settle([self._sendRequest]).then(function () {
 
         return new Promise(function (resolve, reject) {
-            self._createSocket().then(function() {
+            self._createSocket().then(function () {
                 self.clientSocket.send(buffer
                     , 0
                     , buffer.length
@@ -112,14 +112,14 @@ MilightController.prototype._sendThreeByteArray = function (threeByteArray) {
                             return reject(err);
                         }
                         else {
-                            debug('Milight: bytesSent=' + bytes +', buffer=[' + buffer2hex(buffer) + ']');
+                            debug('Milight: bytesSent=' + bytes + ', buffer=[' + buffer2hex(buffer) + ']');
                             return Promise.delay(self._delayBetweenCommands).then(function () {
                                 return resolve();
                             });
                         }
                     }
                 );
-            }).catch(function(error) {
+            }).catch(function (error) {
                 return reject(error);
             })
         })
@@ -142,7 +142,7 @@ MilightController.prototype.sendCommands = function (varArgArray) {
 
     return self._lastRequest = Promise.settle([self._lastRequest]).then(function () {
 
-        for (var r=0; r < self._commandRepeat; r++) {
+        for (var r = 0; r < self._commandRepeat; r++) {
             for (var i = 0; i < varArgs.length; i++) {
                 if (!varArgs[i] instanceof Array) {
                     return Promise.reject(new Error("Array arguments required"));
