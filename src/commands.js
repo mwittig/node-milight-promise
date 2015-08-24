@@ -65,7 +65,6 @@ ColorRgbwCmd.prototype.hue =  function(decimal)
 ColorRgbwCmd.prototype.whiteMode = function(zone)
 {  return [[0xc2,0xc5,0xc7,0xc9,0xcb][zone],0x00,0x55] };
 
-//function(){  	return [0xC2,0x00,0x55] };
 /* Brightness range 1-100 [targets last ON() activated bulb(s)]*/
 ColorRgbwCmd.prototype.brightness = 	function(percent)
 { 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*19))-1 ); //19 steps
@@ -80,7 +79,13 @@ ColorRgbwCmd.prototype.brightness = 	function(percent)
 /* Effect mode next [targets last ON() activated bulb(s)] */
 ColorRgbwCmd.prototype.effectModeNext =	function(){  return [0x4D,0x00,0x55] };
 ColorRgbwCmd.prototype.effectSpeedUp = 	function(){  return [0x44,0x00,0x55] };
-ColorRgbwCmd.prototype.effectSpeedDown= function(){  return [0x44,0x00,0x55] };
+ColorRgbwCmd.prototype.effectSpeedDown= function(){  return [0x43,0x00,0x55] };
+
+/* Switch zone to Night Light Mode with value '0' to target ALL zones,
+ * , value '1' for zone 1, value '2' for zone 2,... to 4 */
+ColorRgbwCmd.prototype.nightMode = function(zone)
+{ return [[0xc1,0xc6,0xc8,0xca,0xcc][index],0x00,0x55]; };
+
 
 /** Converts a RGB color value to HSV
  * @see http://en.wikipedia.org/wiki/HSL_and_HSV and http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
@@ -116,7 +121,6 @@ ColorRgbwCmd.prototype.rgbToHsv = function rgbToHsl(r, g, b) {
         s = Math.round(s * 100);
         v = Math.round(v * 100);
     }
-    //console.log([h,s,v ]);
     return [h, s, v];
 };
 
@@ -151,19 +155,19 @@ ColorRgbwCmd.prototype.rgb255 =  function (r, g, b) {
  * You can also use this command to link your bulbs
  * Prepend this command once for the appropriate zone to activate the zone
  * before using brightUp() / brightDown() / warmer() / cooler() */
-WhiteCmd.prototype.on = function(zone){  return [[0x45, 0x38,0x3D,0x37,0x32][zone],0x00,0x55]; };
+WhiteCmd.prototype.on = function(zone){  return [[0x35,0x38,0x3D,0x37,0x32][zone],0x00,0x55]; };
 
 /* Switch OFF zone with value '0' to target ALL zones, 
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 WhiteCmd.prototype.off = function(zone)
-{ return [[0x39, 0x3B,0x33,0x3A,0x36][zone],0x00,0x55]; };
+{ return [[0x39,0x3B,0x33,0x3A,0x36][zone],0x00,0x55]; };
 
 /* Switch zone to Night Light Mode with value '0' to target ALL zones, 
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 WhiteCmd.prototype.nightMode = function(zone)
-{ return [[0xB9, 0x3B,0x33,0x3A,0x36][index],0x00,0x55]; };
-WhiteCmd.prototype.allOn = 		function(){ return [0x45,0x00,0x55] };
-WhiteCmd.prototype.allOff = 	function(){ return [0x39,0x00,0x55] };
+{ return [[0xB9,0xBB,0xB3,0xBA,0xB6][index],0x00,0x55]; };
+WhiteCmd.prototype.allOn = 	function(){  return this.on(0) };
+WhiteCmd.prototype.allOff = 	function(){  return this.off(0) };
 WhiteCmd.prototype.brightUp = 	function(){ return [0x3c,0x00,0x55] };
 WhiteCmd.prototype.brightDown = function(){ return [0x34,0x00,0x55] };
 WhiteCmd.prototype.warmer = 	function(){ return [0x3E,0x00,0x55] };
