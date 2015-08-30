@@ -84,7 +84,7 @@ ColorRgbwCmd.prototype.effectSpeedDown= function(){  return [0x43,0x00,0x55] };
 /* Switch zone to Night Light Mode with value '0' to target ALL zones,
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 ColorRgbwCmd.prototype.nightMode = function(zone)
-{ return [[0xC1,0xC6,0xC8,0xCA,0xCC][index],0x00,0x55]; };
+{ return [[0xC1,0xC6,0xC8,0xCA,0xCC][zone],0x00,0x55]; };
 
 
 /** Converts a RGB color value to HSV
@@ -165,12 +165,12 @@ WhiteCmd.prototype.off = function(zone)
 /* Switch zone to Night Light Mode with value '0' to target ALL zones, 
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 WhiteCmd.prototype.nightMode = function(zone)
-{ return [[0xB9,0xBB,0xB3,0xBA,0xB6][index],0x00,0x55]; };
+{ return [[0xB9,0xBB,0xB3,0xBA,0xB6][zone],0x00,0x55]; };
 
 /* Switch zone to maximum brightness with value '0' to target ALL zones, 
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 WhiteCmd.prototype.maxBright = function(zone)
-{ return [[0xB5,0xB8,0xBD,0xB7,0xB2][index],0x00,0x55]; };
+{ return [[0xB5,0xB8,0xBD,0xB7,0xB2][zone],0x00,0x55]; };
 
 WhiteCmd.prototype.allOn = 		function(){ return this.on(0) };
 WhiteCmd.prototype.allOff = 		function(){ return this.off(0) };
