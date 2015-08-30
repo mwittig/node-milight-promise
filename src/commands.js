@@ -63,7 +63,7 @@ ColorRgbwCmd.prototype.hue =  function(decimal)
 /* Switch to white mode use function parameter `zone` with value '0' to target ALL zones,
  * value '1' for zone 1, value '2' for zone 2,... to 4 */
 ColorRgbwCmd.prototype.whiteMode = function(zone)
-{  return [[0xc2,0xc5,0xc7,0xc9,0xcb][zone],0x00,0x55] };
+{  return [[0xC2,0xC5,0xC7,0xC9,0xCB][zone],0x00,0x55] };
 
 /* Brightness range 1-100 [targets last ON() activated bulb(s)]*/
 ColorRgbwCmd.prototype.brightness = 	function(percent)
@@ -84,7 +84,7 @@ ColorRgbwCmd.prototype.effectSpeedDown= function(){  return [0x43,0x00,0x55] };
 /* Switch zone to Night Light Mode with value '0' to target ALL zones,
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 ColorRgbwCmd.prototype.nightMode = function(zone)
-{ return [[0xc1,0xc6,0xc8,0xca,0xcc][index],0x00,0x55]; };
+{ return [[0xC1,0xC6,0xC8,0xCA,0xCC][index],0x00,0x55]; };
 
 
 /** Converts a RGB color value to HSV
@@ -166,12 +166,18 @@ WhiteCmd.prototype.off = function(zone)
  * , value '1' for zone 1, value '2' for zone 2,... to 4 */
 WhiteCmd.prototype.nightMode = function(zone)
 { return [[0xB9,0xBB,0xB3,0xBA,0xB6][index],0x00,0x55]; };
-WhiteCmd.prototype.allOn = 	function(){  return this.on(0) };
-WhiteCmd.prototype.allOff = 	function(){  return this.off(0) };
-WhiteCmd.prototype.brightUp = 	function(){ return [0x3c,0x00,0x55] };
-WhiteCmd.prototype.brightDown = function(){ return [0x34,0x00,0x55] };
-WhiteCmd.prototype.warmer = 	function(){ return [0x3E,0x00,0x55] };
-WhiteCmd.prototype.cooler = 	function(){ return [0x3F,0x00,0x55] };
+
+/* Switch zone to maximum brightness with value '0' to target ALL zones, 
+ * , value '1' for zone 1, value '2' for zone 2,... to 4 */
+WhiteCmd.prototype.maxBright = function(zone)
+{ return [[0xB5,0xB8,0xBD,0xB7,0xB2][index],0x00,0x55]; };
+
+WhiteCmd.prototype.allOn = 		function(){ return this.on(0) };
+WhiteCmd.prototype.allOff = 		function(){ return this.off(0) };
+WhiteCmd.prototype.brightUp = 		function(){ return [0x3C,0x00,0x55] };
+WhiteCmd.prototype.brightDown = 	function(){ return [0x34,0x00,0x55] };
+WhiteCmd.prototype.warmer = 		function(){ return [0x3E,0x00,0x55] };
+WhiteCmd.prototype.cooler = 		function(){ return [0x3F,0x00,0x55] };
 
 
 /* RGB BULBS & CONTROLLERS, PREVIOUS GENERATION SINGLE CHANNEL/ZONE*/
