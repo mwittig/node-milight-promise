@@ -49,3 +49,5 @@ Instead of providing the broadcast IP address which is the default, you should p
 * 20150510, V0.0.2
     * Improved and simplified synchronization of command sequences
     * Added repeat mode to send each sequences multiple times
+* 20150901, V0.0.3
+    * Corrected commands, added RGBW night mode, and cleanup - big thanks to @dotsam for his contribution!
