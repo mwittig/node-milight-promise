@@ -51,3 +51,5 @@ Instead of providing the broadcast IP address which is the default, you should p
     * Added repeat mode to send each sequences multiple times
 * 20150901, V0.0.3
     * Corrected commands, added RGBW night mode, and cleanup - big thanks to @dotsam for his contribution!
+    * Revised license information to provide a SPDX 2.0 license identifier according to npm v2.1 guidelines 
+      on license metadata - see also https://github.com/npm/npm/releases/tag/v2.10.0
