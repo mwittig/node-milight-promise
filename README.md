@@ -7,14 +7,14 @@ A node module to control Milight LED bulbs and OEM equivalents auch as Rocket LE
 
 ## Introduction
 
-Milight uses a very primitive three-byte-sequence one-way communication proptocol where each command must be sent in a 
- single UDP packet. It is fire & forget really similar to simply RF protocols fro garage door openers and such.
+Milight uses a very primitive three-byte-sequence one-way communication protocol where each command must be sent in a 
+ single UDP packet. It is fire & forget really similar to simply RF protocols for garage door openers and such.
  Compared to other Milight libraries I am using a more more aggressive timing for the delay between sending UDP command 
  packets (```delayBetweenCommands``` property). 
- Generally, the delay is to reduce the chances of UDP package loss on the network. A longer delay may lower the risk of 
+ Generally, the delay is to reduce the chances of UDP packet loss on the network. A longer delay may lower the risk of 
  data loss, however, data loss is likely to occur occasionally on a wireless network. Keep in mind, that apart from your 
  Wifi network there is another lossy communications channel between the Milight Controller and the bulbs. My strategy 
- against loss is to repeat each command send three times (```commandRepeat``` property). 
+ against loss is to repeat each command. By default it will be send three times (```commandRepeat``` property). 
 
 ## Usage Example
 

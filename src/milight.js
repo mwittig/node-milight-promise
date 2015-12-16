@@ -14,7 +14,7 @@ const
 //
 
 function buffer2hex(buffer) {
-    result = [];
+    var result = [];
     for (var i = 0; i < buffer.length; i++) {
         result.push('0x' + buffer[i].toString(16))
     }
