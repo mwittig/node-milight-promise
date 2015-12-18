@@ -1,16 +1,19 @@
 # node-milight-promise
 
-A node module to control Milight LED bulbs and OEM equivalents auch as Rocket LED, Limitless LED Applamp, 
- Easybulb, s`luce, iLight, iBulb, and Kreuzer. This library use Promises to automatically synchronize the command 
- sequences. So there is no need for nesting commands using callback. Of course, each API call returns a promise which
- can be used to wait for the call to be resolved or rejected.
+A node module to control Milight LED bulbs and OEM equivalents such as Rocket LED, Limitless LED Applamp, 
+ Easybulb, s`luce, iLight, iBulb, and Kreuzer. This library uses Promises to automatically synchronize the command 
+ sequences. Thus, there is no need for nesting commands using callbacks. Of course, each API call returns a promise 
+ which can be used to wait for the call to be resolved or rejected. The module has been tested with RGBW and White 
+ bulbs using a Milight version 4 bridge. RGB bulbs which are no longer sold since January 2014 should also work using
+ the rgb command set.
 
 ## Introduction
 
 Milight uses a very primitive three-byte-sequence one-way communication protocol where each command must be sent in a 
- single UDP packet. It is fire & forget really similar to simply RF protocols for garage door openers and such.
- Compared to other Milight libraries I am using a more more aggressive timing for the delay between sending UDP command 
+ single UDP packet. It is just fire & forget similar to simple RF protocols for garage door openers and such.
+ Compared to other Milight libraries, I am using a more more aggressive timing for the delay between sending UDP command 
  packets (```delayBetweenCommands``` property). 
+ 
  Generally, the delay is to reduce the chances of UDP packet loss on the network. A longer delay may lower the risk of 
  data loss, however, data loss is likely to occur occasionally on a wireless network. Keep in mind, that apart from your 
  Wifi network there is another lossy communications channel between the Milight Controller and the bulbs. My strategy 
@@ -18,28 +21,42 @@ Milight uses a very primitive three-byte-sequence one-way communication protocol
 
 ## Usage Example
 
+See also example code provided in the `examples` directory of the package.
+
     var Milight = require('../src/index').MilightController;
     var commands = require('../src/index').commands;
     
-    
     var light = new Milight({
             ip: "255.255.255.255",
-            delayBetweenCommands: 35,
-            commandRepeat: 3
+            delayBetweenCommands: 50,
+            commandRepeat: 2
         }),
         zone = 1;
     
-    light.sendCommands(commands.rgbw.on(zone), commands.rgbw.brightness(100));
-    for (var x=0; x<256; x++) {
-        light.sendCommands( commands.rgbw.on(zone), commands.rgbw.hue(x));
+    light.sendCommands(commands.rgbw.on(zone), commands.rgbw.brightness(100), commands.rgbw.whiteMode(zone));
+    light.pause(1000);
+    
+    for (var x = 100; x >= 0; x -= 5) {
+        light.sendCommands(commands.rgbw.brightness(x));
+        light.pause(100);
     }
     light.pause(1000);
+    
     light.sendCommands(commands.rgbw.on(zone), commands.rgbw.whiteMode(zone));
-    
+    light.pause(1000);
+
+    light.sendCommands(commands.rgbw.off(zone));
     light.close();
-    
-Instead of providing the broadcast IP address which is the default, you should provide the IP address 
- of the Milight Controller for unicast mode.
+
+## Important Notes
+
+* Instead of providing the global broadcast address which is the default, you should provide the IP address 
+  of the Milight Controller for unicast mode. Don't use the global broadcast address on Windows as this may give
+  unexpected results. On Windows, global broadcast packets will only be routed via the first network adapter. If
+  you want to use a broadcast address though, use a network-specific address, e.g. for `192.168.0.1/24` use
+  `192.168.0.255`.
+* For White bulbs the property `commandRepeat` should be set to `1`, as the brightnessUp/brightnessDown, and
+  warmer/cooler commands will perform multiple steps otherwise.
     
 ## History
 
@@ -53,3 +70,6 @@ Instead of providing the broadcast IP address which is the default, you should p
     * Corrected commands, added RGBW night mode, and cleanup - big thanks to @dotsam for his contribution!
     * Revised license information to provide a SPDX 2.0 license identifier according to npm v2.1 guidelines 
       on license metadata - see also https://github.com/npm/npm/releases/tag/v2.10.0
+* 20151218, V0.0.3
+    * New example code for RGBW and WW/CW bulbs
+    * Revised README
