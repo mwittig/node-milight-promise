@@ -70,6 +70,6 @@ See also example code provided in the `examples` directory of the package.
     * Corrected commands, added RGBW night mode, and cleanup - big thanks to @dotsam for his contribution!
     * Revised license information to provide a SPDX 2.0 license identifier according to npm v2.1 guidelines 
       on license metadata - see also https://github.com/npm/npm/releases/tag/v2.10.0
-* 20151218, V0.0.3
+* 20151219, V0.0.4
     * New example code for RGBW and WW/CW bulbs
     * Revised README
