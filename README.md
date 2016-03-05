@@ -1,5 +1,7 @@
 # node-milight-promise
 
+[![Build Status](https://travis-ci.org/mwittig/node-milight-promise.svg?branch=master)](https://travis-ci.org/mwittig/node-milight-promise)
+
 A node module to control Milight LED bulbs and OEM equivalents such as Rocket LED, Limitless LED Applamp, 
  Easybulb, s`luce, iLight, iBulb, and Kreuzer. This library uses Promises to automatically synchronize the command 
  sequences. Thus, there is no need for nesting commands using callbacks. Of course, each API call returns a promise 
