@@ -57,6 +57,6 @@ for (var x = 0; x < 10; x++) {
 }
 
 light.close().then(function () {
-    console.log("Finished");
+    console.log("All command have been executed - closing Milight");
 });
-
+console.log("Invocation of asynchronous Milight commands done");

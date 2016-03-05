@@ -11,13 +11,19 @@ A node module to control Milight LED bulbs and OEM equivalents such as Rocket LE
 
 Milight uses a very primitive three-byte-sequence one-way communication protocol where each command must be sent in a 
  single UDP packet. It is just fire & forget similar to simple RF protocols for garage door openers and such.
- Compared to other Milight libraries, I am using a more more aggressive timing for the delay between sending UDP command 
+ Compared to other Milight libraries, I am using a more aggressive timing for the delay between sending UDP command 
  packets (```delayBetweenCommands``` property). 
  
  Generally, the delay is to reduce the chances of UDP packet loss on the network. A longer delay may lower the risk of 
  data loss, however, data loss is likely to occur occasionally on a wireless network. Keep in mind, that apart from your 
  Wifi network there is another lossy communications channel between the Milight Controller and the bulbs. My strategy 
  against loss is to repeat each command. By default it will be send three times (```commandRepeat``` property). 
+ 
+## What's new
+
+As Promise.settle() has been deprecated I have rolled my own method based Promised.reflect(). I have also started to 
+writes some tests and to provide for test and build automation including builds for node 0.10.x and 4.0. Test 
+coverage isn't great, but I'll continue to work on this in the future.
 
 ## Usage Example
 
@@ -62,7 +68,6 @@ See also example code provided in the `examples` directory of the package.
 
 * 20150426, V0.0.1
     * Initial Version
-
 * 20150510, V0.0.2
     * Improved and simplified synchronization of command sequences
     * Added repeat mode to send each sequences multiple times
@@ -73,3 +78,7 @@ See also example code provided in the `examples` directory of the package.
 * 20151219, V0.0.4
     * New example code for RGBW and WW/CW bulbs
     * Revised README
+* 20160305, V0.0.5
+    * Replaced deprecated use of Promise.settle()
+    * Added baseline for automated builds and tests (travis, istanbul, coveralls)
+    * Added some tests cases

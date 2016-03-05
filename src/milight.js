@@ -26,6 +26,16 @@ function consoleDebug() {
     console.log.apply(this, arguments)
 }
 
+function settlePromise(aPromise) {
+    return aPromise.reflect();
+}
+
+function settlePromises(promisesArray) {
+    return Promise.all(promisesArray.map(function(promise) {
+        return promise.reflect()
+    }));
+}
+
 //
 // Class MilightController
 //
@@ -61,7 +71,7 @@ var MilightController = function (options) {
 MilightController.prototype._createSocket = function () {
     var self = this;
 
-    return Promise.settle([self._socketInit]).then(function () {
+    return settlePromise(self._socketInit).then(function () {
 
         return self._socketInit = new Promise(function (resolve, reject) {
             if (self.clientSocket) {
@@ -97,7 +107,7 @@ MilightController.prototype._sendThreeByteArray = function (threeByteArray) {
     var buffer = new Buffer(threeByteArray),
         self = this;
 
-    return self._sendRequest = Promise.settle([self._sendRequest]).then(function () {
+    return self._sendRequest = settlePromise(self._sendRequest).then(function () {
 
         return new Promise(function (resolve, reject) {
             self._createSocket().then(function () {
@@ -140,7 +150,7 @@ MilightController.prototype.sendCommands = function (varArgArray) {
         varArgs = arguments,
         self = this;
 
-    return self._lastRequest = Promise.settle([self._lastRequest]).then(function () {
+    return self._lastRequest = settlePromise(self._lastRequest).then(function () {
 
         for (var r = 0; r < self._commandRepeat; r++) {
             for (var i = 0; i < varArgs.length; i++) {
@@ -160,7 +170,7 @@ MilightController.prototype.sendCommands = function (varArgArray) {
                 }
             }
         }
-        return Promise.settle(stackedCommands)
+        return settlePromises(stackedCommands)
     });
 };
 
@@ -174,7 +184,7 @@ MilightController.prototype.pause = function (ms) {
     var self = this;
     ms = ms || 100;
 
-    return self._lastRequest = Promise.settle([self._lastRequest]).then(function () {
+    return self._lastRequest = settlePromise(self._lastRequest).then(function () {
         return Promise.delay(ms);
     })
 };
@@ -187,7 +197,7 @@ MilightController.prototype.pause = function (ms) {
 MilightController.prototype.close = function () {
     var self = this;
 
-    return self._lastRequest = Promise.settle([self._lastRequest]).then(function () {
+    return self._lastRequest = settlePromise(self._lastRequest).then(function () {
         if (self.clientSocket) {
             self.clientSocket.close();
             delete self.clientSocket;

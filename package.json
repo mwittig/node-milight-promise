@@ -13,6 +13,9 @@
     "LICENSE",
     "README.md"
   ],
+  "scripts": {
+    "test": "./node_modules/.bin/gulp"
+  },
   "homepage": "https://github.com/mwittig/node-milight-promise",
   "license": "MIT",
   "repository": {
@@ -30,5 +33,13 @@
   ],
   "dependencies": {
     "bluebird": "^3.3.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-jasmine": "^2.3.0",
+    "gulp-plumber": "^1.1.0",
+    "lodash": "^4.6.1"
   }
 }

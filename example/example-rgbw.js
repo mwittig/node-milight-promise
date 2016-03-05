@@ -36,7 +36,7 @@ light.pause(1000);
 light.sendCommands(commands.rgbw.on(zone), commands.rgbw.whiteMode(zone));
 light.pause(1000);
 
-// Setting Hue
+// Setting Brightness
 light.sendCommands(commands.rgbw.on(zone));
 for (var x = 100; x >= 0; x -= 5) {
     light.sendCommands(commands.rgbw.brightness(x));
@@ -48,6 +48,6 @@ light.sendCommands(commands.rgbw.off(zone));
 light.pause(1000);
 
 light.close().then(function () {
-    console.log("Finished");
+    console.log("All command have been executed - closing Milight");
 });
-
+console.log("Invocation of asynchronous Milight commands done");
