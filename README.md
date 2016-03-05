@@ -1,6 +1,7 @@
 # node-milight-promise
 
 [![Build Status](https://travis-ci.org/mwittig/node-milight-promise.svg?branch=master)](https://travis-ci.org/mwittig/node-milight-promise)
+[![Coverage Status](https://coveralls.io/repos/github/mwittig/node-milight-promise/badge.svg?branch=master)](https://coveralls.io/github/mwittig/node-milight-promise?branch=master)
 
 A node module to control Milight LED bulbs and OEM equivalents such as Rocket LED, Limitless LED Applamp, 
  Easybulb, s`luce, iLight, iBulb, and Kreuzer. This library uses Promises to automatically synchronize the command 
