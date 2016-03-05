@@ -22,7 +22,7 @@ Milight uses a very primitive three-byte-sequence one-way communication protocol
 ## What's new
 
 As Promise.settle() has been deprecated I have rolled my own method based Promised.reflect(). I have also started to 
-writes some tests and to provide for test and build automation including builds for node 0.10.x and 4.0. Test 
+write some tests and to provide for test and build automation (for node 0.10.x and 4.x). Test 
 coverage isn't great, but I'll continue to work on this in the future.
 
 ## Usage Example
