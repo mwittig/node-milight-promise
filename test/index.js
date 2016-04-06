@@ -1,6 +1,6 @@
 var dgram = require('dgram');
 var Promise = require('bluebird');
-var _ = require('lodash');
+var flattenDeep = require('lodash.flattendeep');
 var Milight = require('../src/milight');
 var commands = require('../src/commands');
 var index = require('../src/index');
@@ -120,7 +120,7 @@ describe("Testing transmission of control sequences", function () {
     });
 
     it("shall receive the command rgbw rbg color", function (done) {
-        var command = _.flattenDeep(commands.rgbw.rgb255(10, 50, 100));
+        var command = flattenDeep(commands.rgbw.rgb255(10, 50, 100));
         light.sendCommands(command)
             .then(function () {
                 expect(bytesReceived.length).toBe(command.length);

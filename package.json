@@ -32,14 +32,14 @@
     "LED"
   ],
   "dependencies": {
-    "bluebird": "^3.3.3"
+    "bluebird": "^3.3.4",
+    "lodash.flattendeep": "^4.1.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-coveralls": "^0.1.4",
-    "gulp-istanbul": "^0.10.3",
+    "gulp-istanbul": "^0.10.4",
     "gulp-jasmine": "^2.3.0",
-    "gulp-plumber": "^1.1.0",
-    "lodash": "^4.6.1"
+    "gulp-plumber": "^1.1.0"
   }
 }
