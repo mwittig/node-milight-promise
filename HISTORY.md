@@ -21,3 +21,6 @@
     * Made "lodash.flattendeep" a "devDependency" as it should
     * Moved release history to separate file
     * Added license info to README
+* 20160503, V0.0.7
+    * Added bridge discovery function
+    * Dependency update

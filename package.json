@@ -32,7 +32,7 @@
     "LED"
   ],
   "dependencies": {
-    "bluebird": "^3.3.4"
+    "bluebird": "^3.3.5"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
