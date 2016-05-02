@@ -4,6 +4,7 @@ var flattenDeep = require('lodash.flattendeep');
 var Milight = require('../src/milight');
 var commands = require('../src/commands');
 var index = require('../src/index');
+var discoverBridges = require('../src/index').discoverBridges;
 
 const PORT = 8899;
 var bytesReceived = [];
@@ -197,6 +198,24 @@ describe("Testing transmission of control sequences", function () {
             .then(function () {
                 expect(bytesReceived.length).toBe(command.length);
                 expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command))
+            })
+            .finally(function () {
+                done();
+            });
+    });
+
+    it("shall invoke the discovery function with a specific", function (done) {
+        discoverBridges({address: "10.10.10.10"}).then(function (results) {
+                expect(results.length).toBe(0);
+        })
+        .finally(function () {
+            done();
+        });
+    });
+
+    it("shall invoke the discovery function with a shorter timeout", function (done) {
+        discoverBridges({timout: 1000}).then(function (results) {
+                expect(results.length).toBeGreaterThan(-1);
             })
             .finally(function () {
                 done();
