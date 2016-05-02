@@ -22,11 +22,19 @@ Milight uses a very primitive three-byte-sequence one-way communication protocol
  Wifi network there is another lossy communications channel between the Milight Controller and the bulbs. My strategy 
  against loss is to repeat each command. By default it will be send three times (```commandRepeat``` property). 
  
-## What's new
+## What's new: Bridge Discovery
 
-As Promise.settle() has been deprecated I have rolled my own method based Promised.reflect(). I have also started to 
-write some tests and to provide for test and build automation (for node 0.10.x and 4.x). Test 
-coverage isn't great, but I'll continue to work on this in the future.
+The new bridge discovery function can be used to discover the IP and MAC addresses of Milight v4 Wifi bridges found 
+on the local network. The following options can be provided to the discovery function.
+
+| Property  | Default           | Type    | Description                                 |
+|:----------|:------------------|:--------|:--------------------------------------------|
+| address   | "255.255.255.255" | String  | The broadcast address                       |
+| timeout   | 3000              | Integer | The timeout in milliseconds for discovery   |
+
+An array of results is returned. Each result contains the following properties:
+* ip: The IP address string
+* max: The MAC address string
 
 ## Usage Example
 
@@ -57,6 +65,14 @@ See also example code provided in the `examples` directory of the package.
     light.sendCommands(commands.rgbw.off(zone));
     light.close();
 
+## Usage example for Discovery
+
+    var discoverBridges = require('../src/index').discoverBridges;
+    
+    discoverBridges().then(function (results) {
+        console.log(results);
+    });
+    
 ## Important Notes
 
 * Instead of providing the global broadcast address which is the default, you should provide the IP address 
