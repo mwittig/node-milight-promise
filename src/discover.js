@@ -37,7 +37,9 @@ module.exports = function (options) {
             });
 
             timeoutId = setTimeout(function() {
-                discoverer.close();
+                try {
+                    discoverer.close();
+                } catch (ex) {/*ignore*/}
                 resolve(discoResults);
             }, timeout)
         });
@@ -59,6 +61,9 @@ module.exports = function (options) {
                 clearTimeout(timeoutId);
             }
             debug(error);
+            try {
+                discoverer.close();
+            } catch (ex) {/*ignore*/}
             reject(error);
         });
     });

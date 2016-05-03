@@ -57,7 +57,9 @@ describe("Testing transmission of control sequences", function () {
 
     afterAll(function () {
         light.close();
-        server.close();
+        try {
+            server.close();
+        } catch(e) {/*ignore*/}
     });
 
     it("shall receive no command on pause", function (done) {
@@ -87,6 +89,7 @@ describe("Testing transmission of control sequences", function () {
                 expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command))
             })
             .finally(function () {
+                myLight.close();
                 done();
             });
     });
@@ -223,7 +226,7 @@ describe("Testing transmission of control sequences", function () {
             });
     });
 
-    it("shall invoke the discovery function with a specific", function (done) {
+    it("shall invoke the discovery function with a specific address and port", function (done) {
         discoverBridges({address: "10.10.10.10", port: 4711}).then(function (results) {
                 expect(results.length).toBe(0);
         })
@@ -253,7 +256,7 @@ describe("Testing transmission of control sequences", function () {
             });
     });
 
-    it("shall invoke the discovery function with an invalid address", function (done) {
+    it("shall invoke the discovery function and get a result", function (done) {
         discoverBridges({address: "localhost", port: PORT}).then(function (results) {
                 expect(results.length).toBe(1);
             })
