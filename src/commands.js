@@ -1,7 +1,7 @@
 /**
  Filename: commands.js
  AppLamp.nl led light API: wifi box byte commands
- © AppLamp.nl: you can share,modify and use this code (commercially) as long as you
+ ï¿½ AppLamp.nl: you can share,modify and use this code (commercially) as long as you
  keep the referer "AppLamp.nl led light API" in the file header.
 
  RESPECT AT LEAST 50 MS BETWEEN EACH SEND COMMAND TO PREVENT PACKAGE LOSS
@@ -187,7 +187,7 @@ ColorRgbCmd.prototype.on = function(){ return [0x22,0x00,0x55] };
 ColorRgbCmd.prototype.hue = function(decimal)
 {
     var hex = decimal.toString(16);
-    hex = (hex.length < 2) ? '0x0'+hex : '0x'+hex;
+    hex = (hex.length < 2) ? parseInt('0x0'+hex) : parseInt('0x'+hex);
     return [0x20,hex,0x55];
 };
 ColorRgbCmd.prototype.brightUp = 	function(){ return [0x23,0x00,0x55] };

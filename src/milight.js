@@ -101,7 +101,7 @@ MilightController.prototype._createSocket = function () {
 
 
 MilightController.prototype._sendThreeByteArray = function (threeByteArray) {
-    if (!threeByteArray instanceof Array) {
+    if (! (threeByteArray instanceof Array)) {
         return Promise.reject(new Error("Array argument required"));
     }
     var buffer = new Buffer(threeByteArray),
@@ -154,7 +154,7 @@ MilightController.prototype.sendCommands = function (varArgArray) {
 
         for (var r = 0; r < self._commandRepeat; r++) {
             for (var i = 0; i < varArgs.length; i++) {
-                if (!varArgs[i] instanceof Array) {
+                if (! (varArgs[i] instanceof Array)) {
                     return Promise.reject(new Error("Array arguments required"));
                 }
                 else {
