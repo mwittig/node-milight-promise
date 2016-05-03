@@ -27,6 +27,6 @@
 * 20160503, V0.0.8
     * Bug fix: hue value not converted to hex in rgb.hue()
     * Bug fix: Fixed array value checks of MilightController
-    * Bug fix: Close discovery socket on error.Test fixture.
+    * Bug fix: Close discovery socket on error
     * Improved error handling
     * Improved test coverage
