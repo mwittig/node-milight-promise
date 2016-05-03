@@ -33,15 +33,15 @@ module.exports = function (options) {
                 }
                 else {
                     debug('UDP message sent to ' + host +':'+ port);
+
+                    timeoutId = setTimeout(function() {
+                        try {
+                            discoverer.close();
+                        } catch (ex) {/*ignore*/}
+                        resolve(discoResults);
+                    }, timeout)
                 }
             });
-
-            timeoutId = setTimeout(function() {
-                try {
-                    discoverer.close();
-                } catch (ex) {/*ignore*/}
-                resolve(discoResults);
-            }, timeout)
         });
 
         discoverer.on('message', function (message, remote) {
