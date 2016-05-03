@@ -27,9 +27,13 @@ module.exports = function (options) {
         discoverer.on('listening', function () {
             discoverer.setBroadcast(true);
 
-            discoverer.send(discoveryMessage, 0, discoveryMessage.length, port, host, function(err, bytes) {
-                if (err) throw err;
-                debug('UDP message sent to ' + host +':'+ port);
+            discoverer.send(discoveryMessage, 0, discoveryMessage.length, port, host, function(error, bytes) {
+                if (error) {
+                    discoverer.emit('error', error);
+                }
+                else {
+                    debug('UDP message sent to ' + host +':'+ port);
+                }
             });
 
             timeoutId = setTimeout(function() {
@@ -50,7 +54,7 @@ module.exports = function (options) {
             }
         });
 
-        discoverer.on('error', function (message, error) {
+        discoverer.on('error', function (error) {
             if (timeoutId !== null) {
                 clearTimeout(timeoutId);
             }

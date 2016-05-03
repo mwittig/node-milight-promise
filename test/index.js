@@ -21,10 +21,14 @@ describe("Testing transmission of control sequences", function () {
             server.close();
         });
 
-        server.on('message', function (msg, rinfo) {
+        server.on('message', function (msg, remote) {
             //console.log('server got:', JSON.stringify(msg));
             for (var x = 0; x < msg.length; x++) {
                 bytesReceived.push(msg[x]);
+            }
+            if (msg.toString() === Buffer([0x4C, 0x69, 0x6E, 0x6B, 0x5F, 0x57, 0x69, 0x2D, 0x46, 0x69]).toString()) {
+                var message = new Buffer("10.10.10.10,AABBCCDDEEFF");
+                server.send(message, 0, message.length, remote.port, remote.address);
             }
         });
 
@@ -70,6 +74,21 @@ describe("Testing transmission of control sequences", function () {
         expect(index.MilightController).toBeDefined();
         expect(index.commands).toBeDefined();
         done();
+    });
+
+    it("shall receive the command rgbw on in broadcast mode", function (done) {
+        var command = commands.rgbw.on(1);
+        myLight = new Milight({
+            commandRepeat: 1
+        });
+        myLight.sendCommands(command)
+            .then(function () {
+                expect(bytesReceived.length).toBe(command.length);
+                expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command))
+            })
+            .finally(function () {
+                done();
+            });
     });
 
     it("shall receive the command rgbw on", function (done) {
@@ -205,7 +224,7 @@ describe("Testing transmission of control sequences", function () {
     });
 
     it("shall invoke the discovery function with a specific", function (done) {
-        discoverBridges({address: "10.10.10.10"}).then(function (results) {
+        discoverBridges({address: "10.10.10.10", port: 4711}).then(function (results) {
                 expect(results.length).toBe(0);
         })
         .finally(function () {
@@ -214,8 +233,32 @@ describe("Testing transmission of control sequences", function () {
     });
 
     it("shall invoke the discovery function with a shorter timeout", function (done) {
-        discoverBridges({timout: 1000}).then(function (results) {
+        discoverBridges({timeout: 1000}).then(function (results) {
                 expect(results.length).toBeGreaterThan(-1);
+            })
+            .finally(function () {
+                done();
+            });
+    });
+
+    it("shall invoke the discovery function with an invalid address", function (done) {
+        discoverBridges({address: "1"}).then(function (results) {
+                expect(true).toBeFalsy();
+            })
+            .catch(function (error) {
+                expect(true).toBeTruthy();
+            })
+            .finally(function () {
+                done();
+            });
+    });
+
+    it("shall invoke the discovery function with an invalid address", function (done) {
+        discoverBridges({address: "localhost", port: PORT}).then(function (results) {
+                expect(results.length).toBe(1);
+            })
+            .catch(function (error) {
+                expect(true).toBeTruthy();
             })
             .finally(function () {
                 done();
