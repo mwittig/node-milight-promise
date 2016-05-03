@@ -27,21 +27,29 @@ module.exports = function (options) {
         discoverer.on('listening', function () {
             discoverer.setBroadcast(true);
 
-            discoverer.send(discoveryMessage, 0, discoveryMessage.length, port, host, function(error, bytes) {
-                if (error) {
-                    discoverer.emit('error', error);
+            try {
+                if (typeof host !== "string") {
+                    throw new TypeError("invalid arguments: IP address must be a string");
                 }
-                else {
-                    debug('UDP message sent to ' + host +':'+ port);
+                discoverer.send(discoveryMessage, 0, discoveryMessage.length, port, host, function(error, bytes) {
+                    if (error) {
+                        discoverer.emit('error', error);
+                    }
+                    else {
+                        debug('UDP message sent to ' + host +':'+ port);
 
-                    timeoutId = setTimeout(function() {
-                        try {
-                            discoverer.close();
-                        } catch (ex) {/*ignore*/}
-                        resolve(discoResults);
-                    }, timeout)
-                }
-            });
+                        timeoutId = setTimeout(function() {
+                            try {
+                                discoverer.close();
+                            } catch (ex) {/*ignore*/}
+                            resolve(discoResults);
+                        }, timeout)
+                    }
+                });
+            }
+            catch (e) {
+                discoverer.emit('error', e);
+            }
         });
 
         discoverer.on('message', function (message, remote) {
