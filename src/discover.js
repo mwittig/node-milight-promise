@@ -22,14 +22,14 @@ module.exports = function (options) {
 
     return new Promise(function (resolve, reject) {
         var discoverer = dgram.createSocket('udp4');
-        discoverer.bind();
+        discoverer.bind(function () {
+            discoverer.setBroadcast(true);
+        });
 
         discoverer.on('listening', function () {
-            discoverer.setBroadcast(true);
-
             try {
                 if (typeof host !== "string") {
-                    throw new TypeError("invalid arguments: IP address must be a string");
+                    discoverer.emit('error', new TypeError("invalid arguments: IP address must be a string"));
                 }
                 discoverer.send(discoveryMessage, 0, discoveryMessage.length, port, host, function(error, bytes) {
                     if (error) {

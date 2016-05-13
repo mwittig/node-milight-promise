@@ -3,5 +3,7 @@ module.exports = {
 
     discoverBridges : require('./discover'),
 
-    commands: require('./commands')
+    commands: require('./commands'),
+
+    commands2: require('./commands2')
 };
