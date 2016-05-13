@@ -30,3 +30,12 @@
     * Bug fix: Close discovery socket on error
     * Improved error handling
     * Improved test coverage
+* 20160513, V0.0.9
+    * Bug fix: Brightness level never reached maximum brightness for RGBW
+    * Bug fix: With `commandRepeat > 1` stacked commands were sent in wrong order
+    * Bug fix: Broadcast mode wasn't set automatically with a network-specific 
+      broadcast ip address
+    * Added `rgbw.brightness2()` which maps brightness 0-100 to 22 levels
+    * Added support for using 2-byte command sequences
+    * Changed default command delay and repeat values
+    * Updated examples
