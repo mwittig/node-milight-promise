@@ -5,7 +5,7 @@
  Filename: commands.js
  AppLamp.nl led light API: wifi box byte commands
  � AppLamp.nl: you can share,modify and use this code (commercially) as long as you
- keep the referer "AppLamp.nl led light API" in the file header.
+ keep the referrer "AppLamp.nl led light API" in the file header.
 
  RESPECT AT LEAST 50 MS BETWEEN EACH SEND COMMAND TO PREVENT PACKAGE LOSS
  The functions in this file will return the appropriate hex commands as 3 byte array
@@ -69,8 +69,8 @@ ColorRgbwCmd.prototype.whiteMode = function(zone)
 {  return [[0xC2,0xC5,0xC7,0xC9,0xCB][zone],0x00,0x55] };
 
 /* Brightness range 1-100 [targets last ON() activated bulb(s)]*/
-ColorRgbwCmd.prototype.brightness = 	function(percent)
-{ 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*20))-1 ); //19 steps
+ColorRgbwCmd.prototype.brightness = function(percent)
+{ 	var brightnessIndex = Math.max( 0,(Math.ceil(percent/100*20))-1 ); //19 steps
     return [ 0x4E
         ,[ 0x02,0x03,0x04,0x05,0x08,0x09
             ,0x0A,0x0B,0x0D,0x0E,0x0F,0x10,0x11
@@ -82,7 +82,7 @@ ColorRgbwCmd.prototype.brightness = 	function(percent)
    0x19,0x1A,0x1B values  did not result in different brightness levels for me (6W bulbs).
  */
 ColorRgbwCmd.prototype.brightness2 = 	function(percent)
-{ 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*22))-1 ); //19 steps
+{ 	var brightnessIndex = Math.max( 0,(Math.ceil(percent/100*22))-1 ); //19 steps
     return [ 0x4E
         ,[ 0x02,0x03,0x04,0x05,0x08,0x09
             ,0x0A,0x0B,0x0D,0x0E,0x0F,0x10,0x11
@@ -106,10 +106,12 @@ ColorRgbwCmd.prototype.nightMode = function(zone)
  * @param r
  * @param g
  * @param b
- * @returns {*{}}
+ * @returns {Array}
  */
 ColorRgbwCmd.prototype.rgbToHsv = function rgbToHsl(r, g, b) {
-    r = r / 255, g = g / 255, b = b / 255;
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
     var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, v = max;
 
@@ -142,12 +144,11 @@ ColorRgbwCmd.prototype.hsvToMilightColor=  function hsvToMilightColor(hsv)
 {
     // On the HSV color circle (0..360) with red at 0 degree. We need to convert to the Milight color circle
     // which has 256 values with red at position 176
-    var color = (256 + 176 - Math.floor(Number(hsv[0]) / 360.0 * 255.0)) % 256;
-    return color;
+    return (256 + 176 - Math.floor(Number(hsv[0]) / 360.0 * 255.0)) % 256;
 };
 
 /**
- * Limitations: As RGBW bulbs do not support setting of saturation, hue and brightness will be.
+ * Limitations: As RGBW bulbs do not support setting of saturation, hue and brightness will be set, only.
  * @param r
  * @param g
  * @param b
