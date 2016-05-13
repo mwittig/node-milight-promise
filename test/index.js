@@ -3,6 +3,7 @@ var Promise = require('bluebird');
 var flattenDeep = require('lodash.flattendeep');
 var Milight = require('../src/milight');
 var commands = require('../src/commands');
+var commands2 = require('../src/commands2');
 var index = require('../src/index');
 var discoverBridges = require('../src/index').discoverBridges;
 
@@ -82,8 +83,8 @@ describe("Testing transmission of control sequences", function () {
             });
     });
 
-    it("shall fail if no array passed _sendThreeByteArray", function (done) {
-        light._sendThreeByteArray(1)
+    it("shall fail if no array passed _sendByteArray", function (done) {
+        light._sendByteArray(1)
             .then(function() {
                 expect(true).toBeFalsy();
             })
@@ -110,50 +111,51 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall provide module exports", function (done) {
         expect(index.MilightController).toBeDefined();
+        expect(index.discoverBridges).toBeDefined();
         expect(index.commands).toBeDefined();
+        expect(index.commands2).toBeDefined();
         done();
     });
 
     it("shall receive the command rgbw on in broadcast mode", function (done) {
-        var command = commands.rgbw.on(1);
         myLight = new Milight({
             commandRepeat: 1
         });
-        myLight.sendCommands(command)
-            .then(function () {
-                expect(bytesReceived.length).toBe(command.length);
-                expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command))
-            })
-            .finally(function () {
-                myLight.close();
-                done();
-            });
-    });
-
-    it("shall receive the command rgbw brightness", function (done) {
-        var command = commands.rgbw.brightness(100);
-        light.sendCommands(command)
-            .then(function () {
-                expect(bytesReceived.length).toBe(command.length);
-                expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command))
-            })
-            .finally(function () {
-                done();
-            });
-    });
-
-    it("shall receive the command rgbw hue", function (done) {
         var calls = [
-            [5],
-            [50]
+            commands.rgbw.on(1),
+            commands2.rgbw.on(1)
         ];
-        var test = function(total, args) {
-            var command = commands.rgbw.hue.apply(commands.rgbw, args);
-            return light.sendCommands(command)
+        var test = function(total, command) {
+            return myLight.sendCommands(command)
                 .then(function () {
                     expect(bytesReceived.length).toBe(command.length);
                     expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
                     bytesReceived = [];
+                    total += bytesReceived.length
+                });
+        };
+        Promise.reduce(
+            calls, test, 0
+        ).finally(function () {
+            myLight.close();
+            done();
+        })
+    });
+
+    it("shall receive the command rgbw brightness", function (done) {
+        var calls = [
+            commands.rgbw.brightness(100),
+            commands2.rgbw.brightness(100),
+            commands.rgbw.brightness2(100),
+            commands2.rgbw.brightness2(100)
+        ];
+        var test = function(total, command) {
+            return myLight.sendCommands(command)
+                .then(function () {
+                    expect(bytesReceived.length).toBe(command.length);
+                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                    bytesReceived = [];
+                    total += bytesReceived.length
                 });
         };
         Promise.reduce(
@@ -163,16 +165,56 @@ describe("Testing transmission of control sequences", function () {
         })
     });
 
+    it("shall receive the command rgbw hue", function (done) {
+        var calls = [
+            [5],
+            [50]
+        ];
+        var test = function(total, args) {
+            var innerCalls = [
+                commands.rgbw.hue.apply(commands.rgbw, args),
+                commands2.rgbw.hue.apply(commands2.rgbw, args)
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
+        };
+        Promise.reduce(
+            calls, test, 0
+        ).finally(function () {
+            done();
+        })
+    });
+
     it("shall send a stacked command", function (done) {
-        var command = commands.rgbw.rgb255(255, 255, 255);
-        return light.sendCommands(command)
-            .then(function () {
-                expect(bytesReceived.length).toBe(flattenDeep(command).length);
-                expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(flattenDeep(command)));
-                bytesReceived = [];
-            }).finally(function () {
-                done();
-            });
+        var calls = [
+            commands.rgbw.rgb255(255, 255, 255),
+            commands2.rgbw.rgb255(255, 255, 255)
+        ];
+        var test = function(total, command) {
+            return myLight.sendCommands(command)
+                .then(function () {
+                    expect(bytesReceived.length).toBe(flattenDeep(command).length);
+                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(flattenDeep(command)));
+                    bytesReceived = [];
+                    total += bytesReceived.length
+                });
+        };
+        Promise.reduce(
+            calls, test, 0
+        ).finally(function () {
+            myLight.close();
+            done();
+        })
     });
 
     it("shall receive the command rgbw rgb color", function (done) {
@@ -185,13 +227,22 @@ describe("Testing transmission of control sequences", function () {
             [0, 100, 255]
         ];
         var test = function(total, args) {
-            var command = flattenDeep(commands.rgbw.rgb255.apply(commands.rgbw, args));
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                flattenDeep(commands.rgbw.rgb255.apply(commands.rgbw, args)),
+                flattenDeep(commands2.rgbw.rgb255.apply(commands2.rgbw, args))
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             calls, test, 0
@@ -202,13 +253,22 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall receive the rgbw command on zone 1", function (done) {
         var test = function(total, commandName) {
-            var command = commands.rgbw[commandName](1);
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                commands.rgbw[commandName](1),
+                commands2.rgbw[commandName](1)
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             ["nightMode", "whiteMode", "on", "off"], test, 0
@@ -219,13 +279,22 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall receive the rgbw command", function (done) {
         var test = function(total, commandName) {
-            var command = commands.rgbw[commandName]();
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                commands.rgbw[commandName](),
+                commands2.rgbw[commandName]()
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             ["allOn", "allOff", "effectModeNext", "effectSpeedUp", "effectSpeedDown"], test, 0
@@ -236,14 +305,22 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall receive the white command on zone 1", function (done) {
         var test = function(total, commandName) {
-            var command = commands.white[commandName](1);
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                    return Promise.resolve()
-                });
+            var innerCalls = [
+                commands.white[commandName](1),
+                commands2.white[commandName](1)
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             ["nightMode", "maxBright", "on", "off"], test, 0
@@ -254,13 +331,22 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall receive the white command", function (done) {
         var test = function(total, commandName) {
-            var command = commands.white[commandName]();
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                commands.white[commandName](),
+                commands2.white[commandName]()
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             ["allOn", "allOff", "warmer", "cooler", "brightUp", "brightDown"], test, 0
@@ -271,13 +357,22 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall receive the rgb command", function (done) {
         var test = function(total, commandName) {
-            var command = commands.rgb[commandName]();
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                commands.rgb[commandName](),
+                commands2.rgb[commandName]()
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             ["on", "off", "speedUp", "speedDown", "effectSpeedUp",
@@ -293,13 +388,22 @@ describe("Testing transmission of control sequences", function () {
             [50]
         ];
         var test = function(total, args) {
-            var command = commands.rgb.hue.apply(commands.rgb, args);
-            return light.sendCommands(command)
-                .then(function () {
-                    expect(bytesReceived.length).toBe(command.length);
-                    expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
-                    bytesReceived = [];
-                });
+            var innerCalls = [
+                commands.rgb.hue.apply(commands.rgb, args),
+                commands2.rgb.hue.apply(commands.rgb, args)
+            ];
+            var innerTest = function(total, command) {
+                return myLight.sendCommands(command)
+                    .then(function () {
+                        expect(bytesReceived.length).toBe(command.length);
+                        expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+                        bytesReceived = [];
+                        total += bytesReceived.length
+                    })
+            };
+            return Promise.reduce(
+                innerCalls, innerTest, 0
+            )
         };
         Promise.reduce(
             calls, test, 0
@@ -311,19 +415,19 @@ describe("Testing transmission of control sequences", function () {
     it("shall invoke the discovery function without options", function (done) {
         discoverBridges().then(function (results) {
                 expect(results.length).toBeGreaterThan(-1);
-        })
-        .finally(function () {
-            done();
-        });
+            })
+            .finally(function () {
+                done();
+            });
     });
 
     it("shall invoke the discovery function with a specific address and port", function (done) {
         discoverBridges({address: "10.10.10.10", port: 4711}).then(function (results) {
                 expect(results.length).toBe(0);
-        })
-        .finally(function () {
-            done();
-        });
+            })
+            .finally(function () {
+                done();
+            });
     });
 
     it("shall invoke the discovery function with a shorter timeout", function (done) {
