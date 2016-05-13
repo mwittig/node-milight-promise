@@ -36,10 +36,15 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-copy": "0.0.2",
     "gulp-coveralls": "^0.1.4",
+    "gulp-inject-string": "^1.1.0",
     "gulp-istanbul": "^0.10.4",
     "gulp-jasmine": "^2.3.0",
     "gulp-plumber": "^1.1.0",
+    "gulp-print": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "lodash.flattendeep": "^4.2.0"
   }
 }

@@ -5,6 +5,9 @@ var plumber = require('gulp-plumber');
 var jasmine = require('gulp-jasmine');
 var istanbul = require('gulp-istanbul');
 var coveralls = require('gulp-coveralls');
+var replace = require('gulp-replace');
+var rename = require('gulp-rename');
+var print = require('gulp-print');
 
 gulp.task('pre-test', function () {
     return gulp.src(['src/**/*.js'])
@@ -31,6 +34,14 @@ gulp.task('test', ['pre-test'], function () {
 gulp.task('coveralls', function () {
     return gulp.src('./coverage/**/lcov.info')
         .pipe(coveralls())
+});
+
+gulp.task('build', function() {
+    return gulp.src(['src/commands.js'])
+        .pipe(replace(/,\s{0,}0x55/g, ''))
+        .pipe(print())
+        .pipe(rename('commands2.js'))
+        .pipe(gulp.dest('src'))
 });
 
 gulp.task('default', ['test']);
