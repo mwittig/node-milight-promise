@@ -2,16 +2,16 @@ var Milight = require('../src/index').MilightController;
 var commands = require('../src/index').commands;
 
 // Important Notes:
-//*   Instead of providing the global broadcast address which is the default, you should provide the IP address
+//    Instead of providing the global broadcast address which is the default, you should provide the IP address
 //    of the Milight Controller for unicast mode. Don't use the global broadcast address on Windows as this may give
 //    unexpected results. On Windows, global broadcast packets will only be routed via the first network adapter. If
 //    you want to use a broadcast address though, use a network-specific address, e.g. for `192.168.0.1/24` use
 //    `192.168.0.255`.
-//*   For White bulbs the property `commandRepeat` should be set to `1`, as the
+//    For White bulbs the property `commandRepeat` should be set to `1`, as the
 
 var light = new Milight({
-        ip: "192.168.178.255",
-        delayBetweenCommands: 70,
+        ip: "255.255.255.255",
+        delayBetweenCommands: 100,
         commandRepeat: 1
     }),
     zone = 0;
