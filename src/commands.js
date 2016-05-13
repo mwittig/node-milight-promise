@@ -1,3 +1,6 @@
+/********************************************************************************
+ * !!! DO NOT CHANGE command2.js as it is generated from commands.js!!!
+ ********************************************************************************/
 /**
  Filename: commands.js
  AppLamp.nl led light API: wifi box byte commands
@@ -67,7 +70,7 @@ ColorRgbwCmd.prototype.whiteMode = function(zone)
 
 /* Brightness range 1-100 [targets last ON() activated bulb(s)]*/
 ColorRgbwCmd.prototype.brightness = 	function(percent)
-{ 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*19))-1 ); //19 steps
+{ 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*20))-1 ); //19 steps
     return [ 0x4E
         ,[ 0x02,0x03,0x04,0x05,0x08,0x09
             ,0x0A,0x0B,0x0D,0x0E,0x0F,0x10,0x11
@@ -75,7 +78,18 @@ ColorRgbwCmd.prototype.brightness = 	function(percent)
         , 0x55
     ];
 };
-
+/* brightness2 uses a extended range of 22 levels as spec'ed by Limitless LED. However,
+   0x19,0x1A,0x1B values  did not result in different brightness levels for me (6W bulbs).
+ */
+ColorRgbwCmd.prototype.brightness2 = 	function(percent)
+{ 	brightnessIndex = Math.max( 0,(Math.ceil(percent/100*22))-1 ); //19 steps
+    return [ 0x4E
+        ,[ 0x02,0x03,0x04,0x05,0x08,0x09
+            ,0x0A,0x0B,0x0D,0x0E,0x0F,0x10,0x11
+            ,0x12,0x13,0x14,0x15,0x17,0x18,0x19,0x1A,0x1B][brightnessIndex]
+        , 0x55
+    ];
+};
 /* Effect mode next [targets last ON() activated bulb(s)] */
 ColorRgbwCmd.prototype.effectModeNext =	function(){  return [0x4D,0x00,0x55] };
 ColorRgbwCmd.prototype.effectSpeedUp = 	function(){  return [0x44,0x00,0x55] };
