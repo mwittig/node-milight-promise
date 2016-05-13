@@ -23,6 +23,7 @@ module.exports = function (options) {
     return new Promise(function (resolve, reject) {
         var discoverer = dgram.createSocket('udp4');
         discoverer.bind(function () {
+            debug("Milight: Discovery socket openend");
             discoverer.setBroadcast(true);
         });
 
@@ -41,6 +42,7 @@ module.exports = function (options) {
                         timeoutId = setTimeout(function() {
                             try {
                                 discoverer.close();
+                                debug("Milight: Discovery socket closed");
                             } catch (ex) {/*ignore*/}
                             resolve(discoResults);
                         }, timeout)
@@ -71,6 +73,7 @@ module.exports = function (options) {
             debug(error);
             try {
                 discoverer.close();
+                debug("Milight: Discovery socket closed");
             } catch (ex) {/*ignore*/}
             reject(error);
         });

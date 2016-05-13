@@ -78,22 +78,20 @@ MilightController.prototype._createSocket = function () {
                 return resolve();
             }
             else {
-                debug("Initializing Socket");
+                debug("Milight: Initializing Socket");
                 var socket = dgram.createSocket('udp4');
 
-                if (self._broadcastMode) {
-                    socket.bind(function () {
-                        socket.setBroadcast(true);
-                        self.clientSocket = socket;
-                        debug("Milight: Initializing Socket (broadcast mode) completed");
-                        return resolve();
-                    });
-                }
-                else {
+                socket.bind(function () {
                     self.clientSocket = socket;
-                    debug("Milight: Initializing Socket done");
+                    if (self._broadcastMode) {
+                        socket.setBroadcast(true);
+                        debug("Milight: Initializing Socket (broadcast mode) done");
+                    }
+                    else {
+                        debug("Milight: Initializing Socket done");
+                    }
                     return resolve();
-                }
+                })
             }
         });
     });
@@ -203,6 +201,7 @@ MilightController.prototype.close = function () {
         if (self.clientSocket) {
             self.clientSocket.close();
             delete self.clientSocket;
+            debug("Milight: Socket closed");
         }
         return Promise.resolve();
     })

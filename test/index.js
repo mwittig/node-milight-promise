@@ -118,7 +118,7 @@ describe("Testing transmission of control sequences", function () {
     });
 
     it("shall receive the command rgbw on in broadcast mode", function (done) {
-        myLight = new Milight({
+        var myLight = new Milight({
             commandRepeat: 1
         });
         var calls = [
@@ -150,7 +150,7 @@ describe("Testing transmission of control sequences", function () {
             commands2.rgbw.brightness2(100)
         ];
         var test = function(total, command) {
-            return myLight.sendCommands(command)
+            return light.sendCommands(command)
                 .then(function () {
                     expect(bytesReceived.length).toBe(command.length);
                     expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -176,7 +176,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.rgbw.hue.apply(commands2.rgbw, args)
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -201,7 +201,7 @@ describe("Testing transmission of control sequences", function () {
             commands2.rgbw.rgb255(255, 255, 255)
         ];
         var test = function(total, command) {
-            return myLight.sendCommands(command)
+            return light.sendCommands(command)
                 .then(function () {
                     expect(bytesReceived.length).toBe(flattenDeep(command).length);
                     expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(flattenDeep(command)));
@@ -212,7 +212,6 @@ describe("Testing transmission of control sequences", function () {
         Promise.reduce(
             calls, test, 0
         ).finally(function () {
-            myLight.close();
             done();
         })
     });
@@ -232,7 +231,7 @@ describe("Testing transmission of control sequences", function () {
                 flattenDeep(commands2.rgbw.rgb255.apply(commands2.rgbw, args))
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -258,7 +257,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.rgbw[commandName](1)
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -284,7 +283,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.rgbw[commandName]()
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -310,7 +309,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.white[commandName](1)
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -336,7 +335,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.white[commandName]()
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -362,7 +361,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.rgb[commandName]()
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
@@ -393,7 +392,7 @@ describe("Testing transmission of control sequences", function () {
                 commands2.rgb.hue.apply(commands.rgb, args)
             ];
             var innerTest = function(total, command) {
-                return myLight.sendCommands(command)
+                return light.sendCommands(command)
                     .then(function () {
                         expect(bytesReceived.length).toBe(command.length);
                         expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
