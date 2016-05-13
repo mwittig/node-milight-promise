@@ -6,8 +6,8 @@ var Promise = require('bluebird'),
 const
     DEFAULT_IP = '255.255.255.255',
     DEFAULT_PORT = 8899,
-    DEFAULT_COMMAND_DELAY = 30,
-    DEFAULT_COMMAND_REPEAT = 3;
+    DEFAULT_COMMAND_DELAY = 50,
+    DEFAULT_COMMAND_REPEAT = 2;
 
 //
 // Local helper functions
@@ -49,7 +49,7 @@ var MilightController = function (options) {
     options = options || {};
 
     this.ip = options.ip || DEFAULT_IP;
-    this._broadcastMode = this.ip === DEFAULT_IP;
+    this._broadcastMode = options.broadcastMode || this.ip.split('.').pop().trim() === '255';
     this.port = options.port || DEFAULT_PORT;
     this._delayBetweenCommands = options.delayBetweenCommands || DEFAULT_COMMAND_DELAY;
     this._commandRepeat = options.commandRepeat || DEFAULT_COMMAND_REPEAT;
@@ -100,11 +100,11 @@ MilightController.prototype._createSocket = function () {
 };
 
 
-MilightController.prototype._sendThreeByteArray = function (threeByteArray) {
-    if (! (threeByteArray instanceof Array)) {
+MilightController.prototype._sendByteArray = function (byteArray) {
+    if (! (byteArray instanceof Array)) {
         return Promise.reject(new Error("Array argument required"));
     }
-    var buffer = new Buffer(threeByteArray),
+    var buffer = new Buffer(byteArray),
         self = this;
 
     return self._sendRequest = settlePromise(self._sendRequest).then(function () {
@@ -152,20 +152,22 @@ MilightController.prototype.sendCommands = function (varArgArray) {
 
     return self._lastRequest = settlePromise(self._lastRequest).then(function () {
 
-        for (var r = 0; r < self._commandRepeat; r++) {
-            for (var i = 0; i < varArgs.length; i++) {
-                if (! (varArgs[i] instanceof Array)) {
-                    return Promise.reject(new Error("Array arguments required"));
-                }
-                else {
-                    var arg = varArgs[i];
-                    if (((arg.length) > 0) && (arg[0] instanceof Array)) {
-                        for (var j = 0; j < arg.length; j++) {
-                            stackedCommands.push(self._sendThreeByteArray(arg[j]));
+        for (var i = 0; i < varArgs.length; i++) {
+            if (! (varArgs[i] instanceof Array)) {
+                return Promise.reject(new Error("Array arguments required"));
+            }
+            else {
+                var arg = varArgs[i];
+                if (((arg.length) > 0) && (arg[0] instanceof Array)) {
+                    for (var j = 0; j < arg.length; j++) {
+                        for (var r = 0; r < self._commandRepeat; r++) {
+                            stackedCommands.push(self._sendByteArray(arg[j]));
                         }
                     }
-                    else {
-                        stackedCommands.push(self._sendThreeByteArray(arg));
+                }
+                else {
+                    for (var r = 0; r < self._commandRepeat; r++) {
+                        stackedCommands.push(self._sendByteArray(arg));
                     }
                 }
             }
