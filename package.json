@@ -39,7 +39,7 @@
     "gulp-copy": "0.0.2",
     "gulp-coveralls": "^0.1.4",
     "gulp-inject-string": "^1.1.0",
-    "gulp-istanbul": "^0.10.4",
+    "gulp-istanbul": "^1.0.0",
     "gulp-jasmine": "^2.3.0",
     "gulp-plumber": "^1.1.0",
     "gulp-print": "^2.0.1",
