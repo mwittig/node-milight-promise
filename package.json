@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-copy": "0.0.2",
+    "gulp-copy": "1.0.0",
     "gulp-coveralls": "^0.1.4",
     "gulp-inject-string": "^1.1.0",
     "gulp-istanbul": "^1.0.0",
