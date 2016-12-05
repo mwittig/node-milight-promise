@@ -11,7 +11,7 @@ module.exports = function (options) {
     var options = options || {};
     var port = options.port || 48899;
     var host = options.address || "255.255.255.255";
-    var timeout = options.timeout || "3000";
+    var timeout = options.timeout || 3000;
     var discoveryMessage = Buffer([
         0x4C, 0x69, 0x6E, 0x6B,
         0x5F, 0x57, 0x69, 0x2D,
