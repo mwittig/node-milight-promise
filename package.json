@@ -32,7 +32,8 @@
     "LED"
   ],
   "dependencies": {
-    "bluebird": "^3.3.5"
+    "bluebird": "^3.3.5",
+    "promise-retryer": "0.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

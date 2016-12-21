@@ -1,0 +1,207 @@
+var helper = require('./helper.js');
+var BridgeLEDCommands = function(){};
+var RgbwCommand = function(){};
+var WhiteCommand = function(){};
+var RgbFullColorCommand = function(){};
+var color = 0x7A;
+var brightness = 0x32;
+
+module.exports = {
+  bridge: new BridgeLEDCommands(),
+  rgbw: new RgbwCommand(),
+  white: new WhiteCommand(),
+  fullColor: new RgbFullColorCommand()
+};
+
+BridgeLEDCommands.prototype.on = function() {
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x03, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.off = function() {
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.whiteMode = function() {
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x05, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.off = function() {
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.brightness = function(b) {
+  var bn = Math.min(Math.max(b, 0x00), 0x64);
+  return [0x31, 0x00, 0x00, 0x00, 0x02, bn, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.hue = function(hue, enableLegacyColorWheel) {
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x52;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
+  return [0x31, 0x00, 0x00, 0x00, 0x01, cn, cn, cn, cn, 0x01]
+};
+
+BridgeLEDCommands.prototype.rgb = function(r, g, b) {
+  return this.hue(helper.rgbToHue(r, g, b), true)
+};
+
+//
+//
+//
+
+RgbwCommand.prototype.on = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x01, 0x00, 0x00, 0x00, zn]
+};
+
+RgbwCommand.prototype.off = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x02, 0x00, 0x00, 0x00, zn]
+};
+
+RgbwCommand.prototype.whiteMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x05, 0x00, 0x00, 0x00, zn]
+};
+
+RgbwCommand.prototype.brightness = function(zone, percent){
+  var bn = Math.min(Math.max(percent, 0x00), 0x64);
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x07, 0x02, bn, 0x00, 0x00, 0x00, zn]
+};
+
+/* Hue range 0-255 [targets last ON() activated bulb(s)] */
+RgbwCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x37;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
+  return [0x31, 0x00, 0x00, 0x07, 0x01, cn, cn, cn, cn, zn]
+};
+
+RgbwCommand.prototype.rgb = function(zone, r, g, b) {
+  return this.hue(zone, helper.rgbToHue(r, g, b), true)
+};
+
+// deprecated
+RgbwCommand.prototype.rgb255 = function(zone, r, g, b) {
+  return this.rgb(zone, r, g, b);
+}
+
+RgbwCommand.prototype.mode = function(zone, mode) {
+  return [0x31, 0x00, 0x00, 0x07, 0x04, mode, 0x00, 0x00, 0x00, zone]
+};
+
+RgbwCommand.prototype.modeSpeedUp = function(zone){
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x03, 0x00, 0x00, 0x00, zone]
+};
+
+RgbwCommand.prototype.modeSpeedDown = function(zone){
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x04, 0x00, 0x00, 0x00, zone]
+};
+
+//
+//
+//
+
+WhiteCommand.prototype.on = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x07, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.off = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x08, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.brightUp = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.brightDown = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x02, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.maxBright = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x81, 0x07, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.nightMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x06, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.warmer = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x03, 0x00, 0x00, 0x00, zn]
+};
+
+WhiteCommand.prototype.cooler = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x01, 0x01, 0x04, 0x00, 0x00, 0x00, zn]
+};
+
+//
+//
+//
+
+RgbFullColorCommand.prototype.on = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x04,0x01, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColorCommand.prototype.off = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x04,0x02, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColorCommand.prototype.whiteMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x05,0x64, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColorCommand.prototype.brightness = function(zone, percent){
+  var bn = Math.min(Math.max(percent, 0x00), 0x64);
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x03, bn, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColorCommand.prototype.saturation = function(zone, percent){
+  var sn = Math.min(Math.max(percent, 0x00), 0x64);
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x02, sn, 0x00, 0x00, 0x00, zn]
+};
+
+/* Hue range 0-255 [targets last ON() activated bulb(s)] */
+RgbFullColorCommand.prototype.hue = function(zone, hue){
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x01, cn, cn, cn, cn, zn]
+};
+
+RgbFullColorCommand.prototype.rgb = function(zone, r, g, b) {
+  return this.hue(zone, helper.rgbToHue(r, g, b))
+};
+
+RgbFullColorCommand.prototype.mode = function(zone, mode) {
+  return [0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColorCommand.prototype.modeSpeedUp = function(zone){
+  return [0x31, 0x00, 0x00, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColorCommand.prototype.modeSpeedDown = function(zone){
+  return [0x31, 0x00, 0x00, 0x08, 0x04, 0x04, 0x00, 0x00, 0x00, zone]
+};

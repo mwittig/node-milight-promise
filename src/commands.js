@@ -21,6 +21,7 @@
  **/
 
 
+var helper = require('./helper.js');
 
 var ColorRgbwCmd = function(){};
 var WhiteCmd     = function(){};
@@ -101,45 +102,6 @@ ColorRgbwCmd.prototype.nightMode = function(zone)
 { return [[0xC1,0xC6,0xC8,0xCA,0xCC][zone],0x00,0x55]; };
 
 
-/** Converts a RGB color value to HSV
- * @see http://en.wikipedia.org/wiki/HSL_and_HSV and http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
- * @param r
- * @param g
- * @param b
- * @returns {Array}
- */
-ColorRgbwCmd.prototype.rgbToHsv = function rgbToHsl(r, g, b) {
-    r = r / 255;
-    g = g / 255;
-    b = b / 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-    var h, s, v = max;
-
-    var d = max - min;
-    s = max == 0 ? 0 : d / max;
-
-    if (max == min) {
-        h = 0;
-    }
-    else {
-        switch (max) {
-            case r:
-                h = ((g - b) / d + (g < b ? 6 : 0));
-                break;
-            case g:
-                h = ((b - r) / d + 2);
-                break;
-            case b:
-                h = ((r - g) / d + 4);
-                break;
-        }
-        h = Math.round(h * 60);
-        s = Math.round(s * 100);
-        v = Math.round(v * 100);
-    }
-    return [h, s, v];
-};
-
 ColorRgbwCmd.prototype.hsvToMilightColor=  function hsvToMilightColor(hsv)
 {
     // On the HSV color circle (0..360) with red at 0 degree. We need to convert to the Milight color circle
@@ -155,9 +117,9 @@ ColorRgbwCmd.prototype.hsvToMilightColor=  function hsvToMilightColor(hsv)
  * @returns {*[]}
  */
 ColorRgbwCmd.prototype.rgb255 =  function (r, g, b) {
-    var hsv= this.rgbToHsv(r, g, b),
-        hue= this.hue(this.hsvToMilightColor(hsv)),
-        brightness=this.brightness(hsv[2]);
+    var hsv = helper.rgbToHsv(r, g, b),
+        hue = this.hue(this.hsvToMilightColor(hsv)),
+        brightness = this.brightness(hsv[2]);
     return [hue, brightness];
 };
 

@@ -24,6 +24,65 @@ Milight uses a very primitive one-way communication protocol where each command 
  
 ## What's new
 
+Support for V6 bridge is developing :) 
+For now, see the examples folder.
+
+### V6 Feature summary
+
+* support for full color (untested), RGBW, WW/CW, and bridge lights
+* optional support for the legacy milight color wheel
+* flow control with automatic retry
+* control for multiple bridges
+* bridge discovery
+* support for unicast and broadcast modes
+
+### TODO
+
+* add missing bits and bobs to the command set like night mode and maximum brightness
+* further improve flow control
+* implement session lifetime
+* support for keep-alive command messages
+* explore use of password bytes
+* test with full color bulb
+
+### Breaking Changes
+
+The old command interface should work as is with the following exception:
+
+* the command function `rgbToHsv()` has ben removed to reduce the amount of code duplication. If you use this 
+  function in your code you can now find the code in `helper.js` which is also exported using the `helper` property.
+  
+There are also some subtle changes of the default behaviour:
+
+* the default for `commandRepeat`has been changed to `1` to provide consistent operation for all modes (WW/CW bulbs 
+  with legacy bridges in particular). Note, beyond, a higher value does not make much sense for V6 as the flow control
+  strategy will automatically resend messages as required (if no receipt received)
+  
+* the default for `delayBetweenCommands`has been changed to `100` ms to provide consistent operation for all modes. 
+  According to my findings a more aggressive timing is possible with the legacy bridges depending on condition of the 
+  LAN (quality of the wireless link and router physics).  
+
+### Flow Control
+
+The new bridge allows for the implementation of flow control as each command message received by the bridge is replied 
+with a receipt message. So far, I have implemented a very simple strategy which is to wait for the receipt 
+
+### Color Model
+
+To my surprise the color model of the V6 bridge is different to the color wheel supported by 
+the earlier bridges versions for RGBW lights. If you look at the old color wheel the new color wheel runs 
+counterclockwise and it is shifted by about 22.5 degrees to the left. It still looks odd to me as it does not match 
+with RGB wheel or the HSV color circle. Another curiosity is that the color wheel of the bridge light is different to the 
+one of the RGBW light as it is shifted by another 22.5 degrees (starting with red instead of violet). 
+Maybe this is a bug of the bridge firmware or a calibration issue?
+
+To cut a long story short I have integrated an optional transformation feature to the hue command for bridge and rgbw 
+commands to optionally support the legacy color wheel. This might be useful for application which provide controls
+for the legacy color wheel.
+
+
+## Features
+
 ### Brightness
 
 I noticed the `rgbw.brightness()` command never reached the maximum brightness level of the bulb and it turned out to be
