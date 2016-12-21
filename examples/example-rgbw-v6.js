@@ -10,7 +10,7 @@ var commands = require('../src/index').commandsV6;
 // *  Note, for the V6 command set each command must be proevided with a zone parameter as shown in the example below!
 
 var light = new Milight({
-    ip: "192.168.178.162",
+    ip: "255.255.255.255",
     type: 'v6'
   }),
   zone = 1;

@@ -9,7 +9,7 @@ var commands = require('../src/index').commandsV6;
 //    `192.168.0.255`.
 
 var light = new Milight({
-    ip: "192.168.178.255",
+    ip: "255.255.255.255",
     type: 'v6'
   });
 

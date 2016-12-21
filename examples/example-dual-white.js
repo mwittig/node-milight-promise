@@ -11,7 +11,7 @@ var commands = require('../src/index').commands;
 //    and warmer/cooler commands will perform multiple steps otherwise.
 
 var light = new Milight({
-        ip: "192.168.178.68",
+        ip: "255.255.255.255",
         delayBetweenCommands: 100,
         commandRepeat: 1
     }),

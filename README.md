@@ -69,17 +69,16 @@ with a receipt message. So far, I have implemented a very simple strategy which 
 
 ### Color Model
 
-To my surprise the color model of the V6 bridge is different to the color wheel supported by 
-the earlier bridges versions for RGBW lights. If you look at the old color wheel the new color wheel runs 
-counterclockwise and it is shifted by about 22.5 degrees to the left. It still looks odd to me as it does not match 
-with RGB wheel or the HSV color circle. Another curiosity is that the color wheel of the bridge light is different to the 
+To my surprise, the color model of the V6 bridge is different to the color wheel supported by earlier 
+bridge versions for RGBW lights. If you look at the old color wheel the new color wheel runs counterclockwise 
+and it is shifted by about 22.5 degrees to the left. It still looks odd to me as it does not match with RGB 
+wheel or the HSV color circle. Another curiosity is the color wheel of the bridge light is different to the 
 one of the RGBW light as it is shifted by another 22.5 degrees (starting with red instead of violet). 
-Maybe this is a bug of the bridge firmware or a calibration issue?
+Maybe this is a bug of the bridge firmware or it is a calibration issue?
 
 To cut a long story short I have integrated an optional transformation feature to the hue command for bridge and rgbw 
-commands to optionally support the legacy color wheel. This might be useful for application which provide controls
-for the legacy color wheel.
-
+to optionally support the legacy color wheel. This might be useful for applications which provide controls
+for the legacy color wheel like the plugin for pimatic does.
 
 ## Features
 
