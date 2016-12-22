@@ -1,16 +1,11 @@
 var Promise = require('bluebird'),
     dgram = require('dgram'),
-    debug = process.env.hasOwnProperty('MILIGHT_DEBUG') ? consoleDebug : function () {
-    };
-
-function consoleDebug() {
-    console.log.apply(this, arguments)
-}
+    helper = require('./helper');
 
 module.exports = function (options) {
     var options = options || {};
     var port = options.port || 48899;
-    var host = options.address || "192.168.178.255";
+    var host = options.address || "255.255.255.255";
     var timeout = options.timeout || 3000;
     var discoverLegacy = !options.hasOwnProperty('type') || options.type == 'all' || options.type == 'legacy';
     var discoverV6 = options.type == 'all' || options.type == 'v6';
@@ -32,7 +27,7 @@ module.exports = function (options) {
     return new Promise(function (resolve, reject) {
         var discoverer = dgram.createSocket('udp4');
         discoverer.bind(function () {
-            debug("Milight: Discovery socket openend");
+            helper.debug("Milight: Discovery socket openend");
             discoverer.setBroadcast(true);
         });
 
@@ -46,12 +41,12 @@ module.exports = function (options) {
                         discoverer.emit('error', error);
                     }
                     else {
-                        debug('UDP message sent to ' + host +':'+ port);
+                        helper.debug('UDP message sent to ' + host +':'+ port);
 
                         timeoutId = setTimeout(function() {
                             try {
                                 discoverer.close();
-                                debug("Milight: Discovery socket closed");
+                                helper.debug("Milight: Discovery socket closed");
                             } catch (ex) {/*ignore*/}
                             resolve(discoResults);
                         }, timeout)
@@ -70,9 +65,9 @@ module.exports = function (options) {
         });
 
         discoverer.on('message', function (message, remote) {
-            debug('UDP message received: ', message);
+            helper.debug('UDP message received: ', message);
             var data = message.toString('ascii').split(/,|:/);
-            debug('Data: ' + data.join(' | '));
+            helper.debug('Data: ' + data.join(' | '));
             if (data.length >= 2) {
                 discoResults.push({
                     ip: data[0],
@@ -87,10 +82,10 @@ module.exports = function (options) {
             if (timeoutId !== null) {
                 clearTimeout(timeoutId);
             }
-            debug(error);
+            helper.debug(error);
             try {
                 discoverer.close();
-                debug("Milight: Discovery socket closed");
+                helper.debug("Milight: Discovery socket closed");
             } catch (ex) {/*ignore*/}
             reject(error);
         });

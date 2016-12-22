@@ -46,7 +46,7 @@ module.exports = {
     return result;
   },
 
-  debug: process.env.hasOwnProperty('MILIGHT_DEBUG') || true? consoleDebug : function () {},
+  debug: process.env.hasOwnProperty('MILIGHT_DEBUG')? consoleDebug : function () {},
 
   settlePromise: function settlePromise(aPromise) {
     return aPromise.reflect();

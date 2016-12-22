@@ -25,6 +25,10 @@ BridgeLEDCommands.prototype.whiteMode = function() {
   return [0x31, 0x00, 0x00, 0x00, 0x03, 0x05, 0x00, 0x00, 0x00, 0x01]
 };
 
+BridgeLEDCommands.prototype.nightMode = function() {
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x06, 0x00, 0x00, 0x00, 0x01]
+};
+
 BridgeLEDCommands.prototype.off = function() {
   return [0x31, 0x00, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x01]
 };
@@ -50,7 +54,7 @@ BridgeLEDCommands.prototype.rgb = function(r, g, b) {
 };
 
 //
-//
+// RGBWW comamnds
 //
 
 RgbwCommand.prototype.on = function(zone) {
@@ -101,20 +105,32 @@ RgbwCommand.prototype.rgb255 = function(zone, r, g, b) {
   return this.rgb(zone, r, g, b);
 };
 
-RgbwCommand.prototype.mode = function(zone, mode) {
-  return [0x31, 0x00, 0x00, 0x07, 0x04, mode, 0x00, 0x00, 0x00, zone]
+RgbwCommand.prototype.effectMode = function(zone, mode) {
+  // values 0x01 to 0x09
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  var mn = Math.min(Math.max(zone, 0x01), 0x09);
+  return [0x31, 0x00, 0x00, 0x07, 0x04, mn, 0x00, 0x00, 0x00, zn]
 };
 
-RgbwCommand.prototype.modeSpeedUp = function(zone){
+var modeNext=0x00;
+RgbwCommand.prototype.effectModeNext = function(zone) {
+  modeNext+=1;
+  if (modeNext > 0x09) {
+    modeNext = 0x01;
+  }
+  return [0x31, 0x00, 0x00, 0x07, 0x04, modeNext, 0x00, 0x00, 0x00, zone]
+};
+
+RgbwCommand.prototype.effectSpeedUp = function(zone){
   return [0x31, 0x00, 0x00, 0x07, 0x03, 0x03, 0x00, 0x00, 0x00, zone]
 };
 
-RgbwCommand.prototype.modeSpeedDown = function(zone){
+RgbwCommand.prototype.effectSpeedDown = function(zone){
   return [0x31, 0x00, 0x00, 0x07, 0x03, 0x04, 0x00, 0x00, 0x00, zone]
 };
 
 //
-//
+// WW/CW commands
 //
 
 WhiteCommand.prototype.on = function(zone) {
