@@ -17,7 +17,7 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test', ['pre-test'], function () {
-    return gulp.src('test/index.js')
+    return gulp.src(['test/v6.js', 'test/legacy.js'])
         .pipe(plumber())
         .pipe(jasmine({
             verbose: false,

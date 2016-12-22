@@ -68,6 +68,11 @@ RgbwCommand.prototype.whiteMode = function(zone) {
   return [0x31, 0x00, 0x00, 0x07, 0x03, 0x05, 0x00, 0x00, 0x00, zn]
 };
 
+RgbwCommand.prototype.nightMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x07, 0x03, 0x06, 0x00, 0x00, 0x00, zn]
+};
+
 RgbwCommand.prototype.brightness = function(zone, percent){
   var bn = Math.min(Math.max(percent, 0x00), 0x64);
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
@@ -94,7 +99,7 @@ RgbwCommand.prototype.rgb = function(zone, r, g, b) {
 // deprecated
 RgbwCommand.prototype.rgb255 = function(zone, r, g, b) {
   return this.rgb(zone, r, g, b);
-}
+};
 
 RgbwCommand.prototype.mode = function(zone, mode) {
   return [0x31, 0x00, 0x00, 0x07, 0x04, mode, 0x00, 0x00, 0x00, zone]

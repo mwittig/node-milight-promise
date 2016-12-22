@@ -20,11 +20,11 @@ module.exports = function (options) {
         0x46, 0x69
     ]);
     var discoveryMessageV6 = Buffer([
-        0X48, 0X46, 0X2D, 0X41,
-        0X31, 0X31, 0X41, 0X53,
-        0X53, 0X49, 0X53, 0X54,
-        0X48, 0X52, 0X45, 0X41,
-        0X44
+        0x48, 0x46, 0x2D, 0x41,
+        0x31, 0x31, 0x41, 0x53,
+        0x53, 0x49, 0x53, 0x54,
+        0x48, 0x52, 0x45, 0x41,
+        0x44
     ]);
     var timeoutId = null;
     var discoResults = [];

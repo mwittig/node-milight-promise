@@ -56,6 +56,9 @@ var milightV6Mixin = function() {
   };
 
   this._sendByteArray = function (byteArray) {
+    if (! (byteArray instanceof Array)) {
+      return Promise.reject(new Error("Array argument required"));
+    }
     this._sequenceNumber=(this._sequenceNumber+1)%256;
     return this._rpc(
       [].concat(0x80, 0x00, 0x00, 0x00, 0x11, this._sessionId,
@@ -75,15 +78,12 @@ var milightV6Mixin = function() {
           }
           byteArray.pop();
         }
-        return this._rpcCallout(byteArray)
+        return this._rpcCall(byteArray)
       }.bind(this)
     })
   };
 
-  this._rpcCallout = function (byteArray) {
-    if (! (byteArray instanceof Array)) {
-      return Promise.reject(new Error("Array argument required"));
-    }
+  this._rpcCall = function (byteArray) {
     var buffer = new Buffer(calcChecksum(byteArray)),
       self = this;
 
@@ -91,6 +91,7 @@ var milightV6Mixin = function() {
 
       return new Promise(function (resolve, reject) {
         self._createSocket().then(function () {
+          self._lastBytesSent = byteArray;
           self.clientSocket.send(buffer
             , 0
             , buffer.length
@@ -104,22 +105,19 @@ var milightV6Mixin = function() {
               else {
                 helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
                 var timeoutId = setTimeout(function() {
-                  self.clientSocket.removeAllListeners('message');
+                  self.clientSocket.removeListener('message', messageHandler);
                   timeoutId = null;
                   helper.debug('no response timeout');
                   reject(new Error("no response timeout"))
-                }, 250);
+                }, (byteArray[0] === 0x80)?250:1000);
                 var messageHandler = function (message, remote) {
                   if (timeoutId !== null) {
                     clearTimeout(timeoutId);
                     timeoutId = null;
                     self.remoteAddress = remote.address;
-                    helper.debug('UDP message received: buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
+                    helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
                     Promise.delay(self._delayBetweenCommands).then(function () {
-                      var result = [];
-                      for (var i = 0; i < message.length; ++i) {
-                        result.push(message[i]);
-                      }
+                      var result = Array.from(message);
                       helper.debug('ready for next command');
                       return resolve(result);
                     });

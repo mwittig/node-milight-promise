@@ -45,7 +45,7 @@ var MilightController = function (options) {
         delayBetweenCommands: this._delayBetweenCommands,
         commandRepeat: this._commandRepeat
     }));
-    this._init();
+    this._initialized = this._init();
 };
 
 //
