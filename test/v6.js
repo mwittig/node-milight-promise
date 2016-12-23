@@ -131,7 +131,13 @@ describe("Testing transmission of control sequences", function () {
   it("shall provide module exports", function (done) {
     expect(index.MilightController).toBeDefined();
     expect(index.discoverBridges).toBeDefined();
-    expect(index.commands).toBeDefined();
+    expect(index.commandsV6).toBeDefined();
+    expect(index.helper).toBeDefined();
+    done();
+  });
+
+  it("shall transform HSV hue to milight hue", function (done) {
+    expect(index.helper.hsvToMilightColor([359, 0, 0])).toBe(178);
     done();
   });
 
@@ -480,6 +486,188 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       ["nightMode", "whiteMode", "on", "off"], test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  //
+  // RGBWW/CW commands
+
+  it("shall receive the command rgbww/cw brightness", function (done) {
+    var calls = [
+      commands.fullColor.brightness(1, 100)
+    ];
+    var test = function(total, command) {
+      expect(command).toBeDefined();
+      return light.sendCommands(command)
+        .then(function () {
+          expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+          expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+          bytesReceived = [];
+          total += bytesReceived.length
+        });
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command rgbww/cw hue", function (done) {
+    var calls = [
+      [1, 5],
+      [1, 50],
+      [1, 255],
+      [1, 5, true],
+      [1, 50, true],
+      [1, 255, true]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor.hue.apply(commands.fullColor, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command rgbww/cw rgb color", function (done) {
+    var calls = [
+      [1, 255, 255, 255],
+      [1, 0, 0, 0],
+      [1, 255, 100, 0],
+      [1, 255, 0, 100],
+      [1, 0, 255, 100],
+      [1, 0, 100, 255]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor.rgb.apply(commands.fullColor, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return Promise.each(command, function(c) {
+          bytesReceived = [];
+          return light.sendCommands(c)
+            .then(function () {
+              expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+              expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+              bytesReceived = [];
+              total += bytesReceived.length
+            })
+        })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the rgbww/cw command on zone 1", function (done) {
+    var test = function(total, commandName) {
+      var innerCalls = [
+        commands.fullColor[commandName](1)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      ["nightMode", "whiteMode", "on", "off"], test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command rgbww/cw effectMode", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 5],
+      [1, 9]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor.effectMode.apply(commands.fullColor, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the rgbww/cw command", function (done) {
+    var test = function(total, commandName) {
+      var innerCalls = [
+        commands.fullColor[commandName](1)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      [/*"allOn", "allOff",*/
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectSpeedUp", "effectSpeedDown"], test, 0
     ).finally(function () {
       done();
     })

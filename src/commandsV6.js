@@ -114,7 +114,7 @@ RgbwCommand.prototype.effectMode = function(zone, mode) {
 
 var modeNext=0x00;
 RgbwCommand.prototype.effectModeNext = function(zone) {
-  modeNext+=1;
+  modeNext += 1;
   if (modeNext > 0x09) {
     modeNext = 0x01;
   }
@@ -174,7 +174,7 @@ WhiteCommand.prototype.cooler = function(zone) {
 };
 
 //
-//
+// RGBWW/CW full color
 //
 
 RgbFullColorCommand.prototype.on = function(zone) {
@@ -184,12 +184,17 @@ RgbFullColorCommand.prototype.on = function(zone) {
 
 RgbFullColorCommand.prototype.off = function(zone) {
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
-  return [0x31, 0x00, 0x00, 0x08, 0x04,0x02, 0x00, 0x00, 0x00, zn]
+  return [0x31, 0x00, 0x00, 0x08, 0x04, 0x02, 0x00, 0x00, 0x00, zn]
 };
 
 RgbFullColorCommand.prototype.whiteMode = function(zone) {
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
-  return [0x31, 0x00, 0x00, 0x08, 0x05,0x64, 0x00, 0x00, 0x00, zn]
+  return [0x31, 0x00, 0x00, 0x08, 0x05, 0x64, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColorCommand.prototype.nightMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  return [0x31, 0x00, 0x00, 0x08, 0x04, 0x05, 0x00, 0x00, 0x00, zn]
 };
 
 RgbFullColorCommand.prototype.brightness = function(zone, percent){
@@ -212,17 +217,31 @@ RgbFullColorCommand.prototype.hue = function(zone, hue){
 };
 
 RgbFullColorCommand.prototype.rgb = function(zone, r, g, b) {
-  return this.hue(zone, helper.rgbToHue(r, g, b))
+  var hsv=helper.rgbToHsv(r, g, b);
+  var hue = hsv[0] * 0xFF % 0x167;
+  return [
+    this.hue(zone, hue),
+    this.saturation(zone, hsv[1])
+  ]
 };
 
-RgbFullColorCommand.prototype.mode = function(zone, mode) {
+RgbFullColorCommand.prototype.effectMode = function(zone, mode) {
   return [0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00, zone]
 };
 
-RgbFullColorCommand.prototype.modeSpeedUp = function(zone){
+var fc_modeNext=0x00;
+RgbFullColorCommand.prototype.effectModeNext = function(zone) {
+  fc_modeNext += 1;
+  if (fc_modeNext > 0x09) {
+    fc_modeNext = 0x01;
+  }
+  return [0x31, 0x00, 0x00, 0x08, 0x06, fc_modeNext, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColorCommand.prototype.effectSpeedUp = function(zone){
   return [0x31, 0x00, 0x00, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00, zone]
 };
 
-RgbFullColorCommand.prototype.modeSpeedDown = function(zone){
+RgbFullColorCommand.prototype.effectSpeedDown = function(zone){
   return [0x31, 0x00, 0x00, 0x08, 0x04, 0x04, 0x00, 0x00, 0x00, zone]
 };
