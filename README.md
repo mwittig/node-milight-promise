@@ -49,8 +49,9 @@ For now, see the examples folder.
 
 The old command interface should work as is with the following exception:
 
-* the command function `rgbToHsv()` has ben removed to reduce the amount of code duplication. If you use this 
-  function in your code you can now find the code in `helper.js` which is also exported using the `helper` property.
+* the command function `rgbToHsv()` and `hsvToMilightColor()` have ben removed to reduce the amount of code duplication. 
+  If you use this function in your code you can now find the code in `helper.js` which is also exported using the 
+  `helper` property.
   
 There are also some subtle changes of the default behaviour:
 

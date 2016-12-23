@@ -3,9 +3,9 @@
 module.exports = {
 
   rgbToHsv: function rgbToHsv(r, g, b) {
-    r = r / 255;
-    g = g / 255;
-    b = b / 255;
+    r /= 0xFF;
+    g /= 0xFF;
+    b /= 0xFF;
     var max = Math.max(r, g, b), min = Math.min(r, g, b);
     var h, s, v = max;
 
@@ -29,6 +29,12 @@ module.exports = {
       v = Math.round(v * 100);
     }
     return [h, s, v];
+  },
+
+  hsvToMilightColor:  function hsvToMilightColor(hsv) {
+    // On the HSV color circle (0..360) with red at 0 degree. We need to convert to the Milight color circle
+    // which has 256 values with red at position 176
+    return (256 + 176 - Math.floor(Number(hsv[0]) / 360.0 * 255.0)) % 256;
   },
 
   rgbToHue: function rgbToMilightHue(r, g, b) {
