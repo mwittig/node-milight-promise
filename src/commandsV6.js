@@ -3,6 +3,7 @@ var BridgeLEDCommands = function(){};
 var RgbwCommand = function(){};
 var WhiteCommand = function(){};
 var RgbFullColorCommand = function(){};
+var RgbCommand = function(){};
 var color = 0x7A;
 var brightness = 0x32;
 
@@ -10,7 +11,8 @@ module.exports = {
   bridge: new BridgeLEDCommands(),
   rgbw: new RgbwCommand(),
   white: new WhiteCommand(),
-  fullColor: new RgbFullColorCommand()
+  fullColor: new RgbFullColorCommand(),
+  rgb: new RgbCommand()
 };
 
 BridgeLEDCommands.prototype.on = function() {
@@ -244,4 +246,65 @@ RgbFullColorCommand.prototype.effectSpeedUp = function(zone){
 
 RgbFullColorCommand.prototype.effectSpeedDown = function(zone){
   return [0x31, 0x00, 0x00, 0x08, 0x04, 0x04, 0x00, 0x00, 0x00, zone]
+};
+
+//
+// RGB BULBS SINGLE CHANNEL/ZONE
+//
+
+RgbCommand.prototype.on = function(zone) {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x09, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.off = function(zone) {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x0a, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.brightUp = function() {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x01, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.brightDown = function() {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x02, 0x00, 0x00, 0x00, 0x01]
+};
+
+/* Hue range 0-255 [targets last ON() activated bulb(s)] */
+RgbCommand.prototype.hue = function(hue, enableLegacyColorWheel){
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x37;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
+  return [0x31, 0x00, 0x00, 0x05, 0x01, cn, cn, cn, cn, 0x01]
+};
+
+RgbCommand.prototype.rgb = function(r, g, b) {
+  return this.hue(helper.rgbToHue(r, g, b), true)
+};
+
+// deprecated
+RgbCommand.prototype.rgb255 = function(r, g, b) {
+  return this.rgb(r, g, b);
+};
+
+RgbCommand.prototype.effectModeUp = function() {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x05, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.effectModeDown = function() {
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x06, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.effectModeNext = function() {
+  return this.effectModeUp()
+};
+
+RgbCommand.prototype.effectSpeedUp = function(){
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x03, 0x00, 0x00, 0x00, 0x01]
+};
+
+RgbCommand.prototype.effectSpeedDown = function(){
+  return [0x31, 0x00, 0x00, 0x05, 0x02, 0x04, 0x00, 0x00, 0x00, 0x01]
 };
