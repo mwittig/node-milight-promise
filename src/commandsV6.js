@@ -212,9 +212,15 @@ RgbFullColorCommand.prototype.saturation = function(zone, percent){
 };
 
 /* Hue range 0-255 [targets last ON() activated bulb(s)] */
-RgbFullColorCommand.prototype.hue = function(zone, hue){
+RgbFullColorCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
   var cn = Math.min(Math.max(hue, 0x00), 0xFF);
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x48;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
   return [0x31, 0x00, 0x00, 0x08, 0x01, cn, cn, cn, cn, zn]
 };
 
