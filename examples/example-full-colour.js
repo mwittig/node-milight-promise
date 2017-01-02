@@ -23,7 +23,6 @@ light.pause(1000);
 // Setting Hue
 light.sendCommands(commands.fullColor.on(zone));
 light.pause(1000);
-
 for (var x = 0; x < 256; x += 5) {
   light.sendCommands(commands.fullColor.hue(zone, x));
   if (x === 0) {
@@ -35,11 +34,18 @@ light.pause(1000);
 light.sendCommands(commands.fullColor.off(zone));
 light.pause(1000);
 
-// Back to white mode
-light.sendCommands(commands.fullColor.on(zone), commands.fullColor.whiteMode(zone));
+// Back to white mode with different color temperatures
+light.sendCommands(commands.fullColor.on(zone));
+light.pause(1000);
+for (var x = 0; x <= 100; x += 1) {
+  light.sendCommands(commands.fullColor.whiteTemperature(zone, x));
+  if (x === 0) {
+    light.sendCommands(commands.fullColor.brightness(zone, 100))
+  }
+}
 light.pause(1000);
 
-// Setting Brightness
+// Setting Brightness (dimming down)
 light.sendCommands(commands.fullColor.on(zone));
 for (var x = 100; x >= 0; x -= 5) {
   light.sendCommands(commands.fullColor.brightness(zone, x));

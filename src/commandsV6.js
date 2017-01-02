@@ -194,6 +194,13 @@ RgbFullColorCommand.prototype.whiteMode = function(zone) {
   return [0x31, 0x00, 0x00, 0x08, 0x05, 0x64, 0x00, 0x00, 0x00, zn]
 };
 
+// temperature values 0x00 to 0x64 : examples: 00 = 2700K (Warm White), 19 = 3650K, 32 = 4600K, 4B, = 5550K, 64 = 6500K (Cool White)
+RgbFullColorCommand.prototype.whiteTemperature = function(zone, temperature) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  var tn = Math.min(Math.max(temperature, 0x00), 0x64);
+  return [0x31, 0x00, 0x00, 0x08, 0x05, tn, 0x00, 0x00, 0x00, zn]
+};
+
 RgbFullColorCommand.prototype.nightMode = function(zone) {
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
   return [0x31, 0x00, 0x00, 0x08, 0x04, 0x05, 0x00, 0x00, 0x00, zn]
