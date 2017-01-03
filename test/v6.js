@@ -612,6 +612,37 @@ describe("Testing transmission of control sequences", function () {
     })
   });
 
+  it("shall receive the command rgbww/cw whiteTemperature", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 50],
+      [1, 100]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor.whiteTemperature.apply(commands.fullColor, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
   it("shall receive the command rgbww/cw effectMode", function (done) {
     var calls = [
       [1, 1],
