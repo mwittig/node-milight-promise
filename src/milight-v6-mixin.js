@@ -153,6 +153,7 @@ var milightV6Mixin = function() {
     this._sessionTimeoutObject = null;
     this._createSession();
     this._scheduleSessionUpdate();
+    return Promise.resolve();
   };
 
   this._close = function () {
