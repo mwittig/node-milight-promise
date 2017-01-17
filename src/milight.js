@@ -8,6 +8,7 @@ const
     DEFAULT_IP = '255.255.255.255',
     DEFAULT_PORT = 8899,
     DEFAULT_PORT_V6 = 5987,
+    DEFAULT_KEEP_ALIVE_V6 = true,
     DEFAULT_COMMAND_DELAY = 100,
     DEFAULT_COMMAND_REPEAT = 1;
 
@@ -28,6 +29,7 @@ var MilightController = function (options) {
     if (this.type === 'v6') {
         milightV6Mixin.call(this);
         this.port = options.port || DEFAULT_PORT_V6;
+        this.sendKeepAlives = options.sendKeepAlives || DEFAULT_KEEP_ALIVE_V6;
     }
     else {
         milightLegacyMixin.call(this);
@@ -153,7 +155,7 @@ MilightController.prototype.close = function () {
             delete self.clientSocket;
             helper.debug("socket closed");
         }
-        return Promise.resolve();
+        return self._close();
     })
 };
 

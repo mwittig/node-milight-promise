@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var dgram = require('dgram');
 var retry = require('promise-retryer')(Promise);
 var helper = require('./helper.js');
-
+var keepAliveHeader = [0xD0, 0x00, 0x00, 0x00, 0x02];
 //
 // Local helper functions
 //
@@ -28,12 +28,8 @@ function calcChecksum(bytes) {
 
 var milightV6Mixin = function() {
 
-  this._init = function () {
+  this._createSession = function() {
     var self = this;
-    self._sessionId = [0xFF, 0xFF];
-    self._sequenceNumber = 4;
-    self._awaitSessionInitialized = self._lastRequest;
-    
     return self._lastRequest = helper.settlePromise(self._lastRequest).then(function () {
 
       return self._awaitSessionInitialized = new Promise(function (resolve, reject) {
@@ -53,6 +49,22 @@ var milightV6Mixin = function() {
         })
       })
     })
+  };
+
+  this._cancelSessionUpdateTimer = function() {
+    if (this._sessionTimeoutObject != null) {
+      clearTimeout(this._sessionTimeoutObject);
+      this._sessionTimeoutObject = null
+    }
+  };
+
+  this._scheduleSessionUpdate = function() {
+    this._cancelSessionUpdateTimer();
+
+    this._sessionTimeoutObject = setTimeout(function() {
+      this._createSession();
+      this._scheduleSessionUpdate();
+    }.bind(this), 300000);
   };
 
   this._sendByteArray = function (byteArray) {
@@ -133,6 +145,21 @@ var milightV6Mixin = function() {
       })
     })
   };
+
+  this._init = function () {
+    this._sessionId = [0xFF, 0xFF];
+    this._sequenceNumber = 4;
+    this._awaitSessionInitialized = this._lastRequest;
+    this._sessionTimeoutObject = null;
+    this._createSession();
+    this._scheduleSessionUpdate();
+  };
+
+  this._close = function () {
+    this._cancelSessionUpdateTimer();
+    return Promise.resolve();
+  };
+
   return this;
 };
 

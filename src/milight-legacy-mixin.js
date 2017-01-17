@@ -48,7 +48,14 @@ var milightLegacyMixin = function() {
       })
     })
   };
+
+  this._close = function () {
+    return Promise.resolve();
+  };
+
   return this;
 };
+
+
 
 module.exports = milightLegacyMixin;
