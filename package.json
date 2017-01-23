@@ -9,9 +9,10 @@
   "license": "MIT",
   "main": "src/index",
   "files": [
-    "example",
+    "examples",
     "src",
     "LICENSE",
+    "HISTORY.md",
     "README.md"
   ],
   "scripts": {
