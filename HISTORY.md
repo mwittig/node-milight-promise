@@ -39,3 +39,5 @@
     * Added support for using 2-byte command sequences
     * Changed default command delay and repeat values
     * Updated examples
+* 20170123, V0.1.0
+    * Added support for the new WiFi Bridge protocol v6.0
