@@ -198,7 +198,7 @@ light.close().then(function () {
 console.log("Invocation of asynchronous Milight commands done");
 ```
 
-### Usage Example for Legacy Bridge
+### Usage Example for v6 Bridge
 
 ```javascript
 var Milight = require('../src/index').MilightController;
