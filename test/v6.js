@@ -141,6 +141,21 @@ describe("Testing transmission of control sequences", function () {
     done();
   });
 
+  it("shall transform RGB to milight hue", function (done) {
+    expect(index.helper.rgbToHue.apply(index.helper, [255, 0, 0])).toBe(0xB0);
+    done();
+  });
+
+  it("shall transform RGB to Milight full color HSV", function (done) {
+    expect(index.helper.rgbToFullColorHsv.apply(index.helper, [255, 0, 0])[0]).toBe(0xB0);
+    done();
+  });
+
+  it("shall transform RGB to Milight full color HSV", function (done) {
+    expect(index.helper.rgbToFullColorHsv.apply(index.helper, [0, 255, 255])[0]).toBe(0x133);
+    done();
+  });
+
   it("shall retry if no response", function (done) {
     var myLight = new Milight({
       type: 'v6'
