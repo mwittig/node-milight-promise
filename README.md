@@ -1,21 +1,26 @@
 # node-milight-promise
 
+[![Npm Version](https://badge.fury.io/js/node-milight-promise.svg)](http://badge.fury.io/js/node-milight-promise)
 [![Build Status](https://travis-ci.org/mwittig/node-milight-promise.svg?branch=master)](https://travis-ci.org/mwittig/node-milight-promise)
 [![Coverage Status](https://coveralls.io/repos/github/mwittig/node-milight-promise/badge.svg?branch=master)](https://coveralls.io/github/mwittig/node-milight-promise?branch=master)
 
 A node module to control Milight LED bulbs and OEM equivalents such as Rocket LED, Limitless LED Applamp, 
  Easybulb, s`luce, iLight, iBulb, and Kreuzer. This library uses Promises to automatically synchronize the command 
- sequences. Thus, there is no need for nesting commands using callbacks. Of course, each API call returns a promise 
- which can be used to wait for the call to be resolved or rejected. The module has been tested with 
+ sequences sent. Thus, there is no need for nesting commands using callbacks. Of course, each API call returns a promise 
+ which can be used to wait for the call promise to be resolved or rejected. The module has been tested with 
  RGB WW/CW (full color), RGBWW and White bulbs using Milight protocol versions 4.0 and 6.0. RGB bulbs which are no 
  longer sold since January 2014 should also work using the rgb command set.
-
-## Introduction
-
+ 
 Earlier versions of Milight used a very primitive one-way communication protocol where each command must be sent in a 
  single UDP packet. It is just fire & forget similar to simple RF protocols for garage door openers and such. Recently, 
- a new generation of Milight products has been introduced which uses a new v6.0 protocol to provide advanced features.
- 
+ a new generation of Milight products has been introduced which use a new v6.0 protocol to provide advanced features. 
+
+## Contributions
+
+Contributions to the project are  welcome. You can simply fork the project and create a pull request with 
+your contribution to start with. If you like this plugin, please consider &#x2605; starring 
+[the project on github](https://github.com/mwittig/node-milight-promise).
+
 ## What's new
 
 The current version includes support for the new WiFi Bridge protocol v6.0 (also referred to as "v6 bridge" by the 
@@ -23,13 +28,14 @@ The current version includes support for the new WiFi Bridge protocol v6.0 (also
  to reduce code duplication (see Breaking Changes below).
 
 Support for the v6 bridge includes the following features:
+
 * support for the new full color RGW WW/CW bulbs
 * support for legacy bulbs WW/CW white bulbs, RGBWW bulbs and RGB(W) strip controllers
 * optional support for the legacy Milight color wheel
 * flow control with automatic retry
 * control for multiple bridges
 * bridge discovery
-* support for unicast and broadcast modes
+* support for unicast and broadcast communication
 
 ### Breaking and Notable Changes
 
@@ -288,9 +294,60 @@ discoverBridges({
   unexpected results. On Windows, global broadcast packets will only be routed via the first network adapter. If
   you want to use a broadcast address though, use a network-specific address, e.g. for `192.168.0.1/24` use
   `192.168.0.255`.
+
 * For White bulbs the property `commandRepeat` should be set to `1`, as the brightnessUp/brightnessDown, and
   warmer/cooler commands will perform multiple steps otherwise.
     
+## References
+
+If you find interesting blog articles or projects based on node-milight-promise, 
+please drop me a link by creating an issue.
+
+### Projects using node-milight-promise
+
+* [homebridge-milight](https://www.npmjs.com/package/homebridge-milight) - a plugin for 
+  [Homebridge](https://www.npmjs.com/package/homebridge)
+  
+* [gladys-milight](https://github.com/GladysProject/gladys-milight) - a plugin for 
+  [Gladys](https://github.com/GladysProject/Gladys)
+
+* [iobroker.milight](https://www.npmjs.com/package/iobroker.milight) - adapter for 
+  [ioBroker](https://www.npmjs.com/package/iobroker)
+
+* [@homenet/plugin-milight](https://www.npmjs.com/package/@homenet/plugin-milight) - plugin for 
+  [Homenet](https://www.npmjs.com/package/@homenet/core)
+
+* [pimatic-milight-reloaded](https://www.npmjs.com/package/pimatic-milight-reloaded) - a plugin for 
+  [pimatic](https://pimatic.org/) to control your lights
+
+* [pimatic-led-light](https://www.npmjs.com/package/pimatic-led-light) - another plugin for 
+  [pimatic](https://pimatic.org/) to control your lights
+
+* [node-red-contrib-milight-wrapper](https://www.npmjs.com/package/node-red-contrib-milight-wrapper) - 
+  a [Node-RED](https://nodered.org/) node to control your lights
+
+* [node-red-contrib-milight](https://www.npmjs.com/package/node-red-contrib-milight) - another node for 
+  [Node-RED](https://nodered.org/) to control your lights
+
+* [node-milight-local-promise](node-milight-local-promise) - extension of node-milight-promise 
+  to work with locally connected milight controllers on an embedded platform
+
+* [milight-buildlight](https://www.npmjs.com/package/milight-buildlight) - module to create a 
+  colour-changing build light for [CircleCI](https://www.npmjs.com/package/circleci)
+
+* [limitless-pushbullet](https://www.npmjs.com/package/limitless-pushbullet) - make your lights blink when 
+  you receive a pushbullet notification
+
+### Articles
+
+* [Full control of your LimitlessLED/Milight bulbs from Amazon Echo](http://codecorner.galanter.net/2017/02/24/full-control-of-your-limitless-ledmilight-v6-bulbs-from-amazon-echo/) 
+  by Yuriy -  an example on how to control your lights using Amazon Echo using 
+  [HA-Bridge](https://github.com/bwssytems/ha-bridge) along with some glue code
+
+* [IoT Part 2 - And There Shall be Light (the smartphone said)](http://www.noamsh.com/iot-part-2-and-there-shall-be-light-the-smartphone-said/) 
+  by Noam Shemesh - turn on the lights based on video motion detection or when a pushbullet notification is received, 
+  see also [limitless-pushbullet](https://www.npmjs.com/package/limitless-pushbullet) written by Noam
+
 ## History
 
 See [Release History](https://github.com/mwittig/node-milight-promise/blob/master/HISTORY.md).
