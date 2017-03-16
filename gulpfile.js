@@ -17,6 +17,7 @@ gulp.task('pre-test', function () {
 });
 
 gulp.task('test', ['pre-test'], function () {
+    //process.env.MILIGHT_DEBUG = true;
     return gulp.src(['test/v6.js', 'test/legacy.js'])
         .pipe(plumber())
         .pipe(jasmine({
