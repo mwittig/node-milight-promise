@@ -44,6 +44,12 @@ module.exports = {
     return (256 + 176 - Math.floor(Number(hsv[0]) / 360.0 * 255.0)) % 256;
   },
 
+  rgbToFullColorHsv: function rgbToFullColorHsv(r, g, b) {
+    var hsv = this.rgbToHsv(r, g, b);
+    hsv[0] = (hsv[0] == 0)?0xB0:hsv[0] * 0xFF % 0x167;
+    return hsv;
+  },
+
   buffer2hex: function buffer2hex(buffer) {
     var result = [];
     for (var i = 0; i < buffer.length; i++) {
