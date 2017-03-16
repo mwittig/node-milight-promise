@@ -212,9 +212,13 @@ RgbFullColorCommand.prototype.brightness = function(zone, percent){
   return [0x31, 0x00, 0x00, 0x08, 0x03, bn, 0x00, 0x00, 0x00, zn]
 };
 
-RgbFullColorCommand.prototype.saturation = function(zone, percent){
-  var sn = Math.min(Math.max(percent, 0x00), 0x64);
+// if invertValue is not set, 0 is max imum saturation!
+RgbFullColorCommand.prototype.saturation = function(zone, saturationValue, invertValue){
+  var sn = Math.min(Math.max(saturationValue, 0x00), 0x64);
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  if (invertValue) {
+    sn = 0x64 - sn;
+  }
   return [0x31, 0x00, 0x00, 0x08, 0x02, sn, 0x00, 0x00, 0x00, zn]
 };
 
@@ -233,10 +237,11 @@ RgbFullColorCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
 
 RgbFullColorCommand.prototype.rgb = function(zone, r, g, b) {
   var hsv=helper.rgbToHsv(r, g, b);
-  var hue = hsv[0] * 0xFF % 0x167;
+  var hue = (hsv[0] == 0)?0xB0:hsv[0] * 0xFF % 0x167;
   return [
     this.hue(zone, hue),
-    this.saturation(zone, hsv[1])
+    this.saturation(zone, hsv[1], true),
+    this.brightness(zone, hsv[2])
   ]
 };
 
