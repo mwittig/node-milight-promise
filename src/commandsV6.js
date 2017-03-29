@@ -56,7 +56,7 @@ BridgeLEDCommands.prototype.rgb = function(r, g, b) {
 };
 
 //
-// RGBWW comamnds
+// RGBWW commands
 //
 
 RgbwCommand.prototype.on = function(zone) {
@@ -212,7 +212,7 @@ RgbFullColorCommand.prototype.brightness = function(zone, percent){
   return [0x31, 0x00, 0x00, 0x08, 0x03, bn, 0x00, 0x00, 0x00, zn]
 };
 
-// if invertValue is not set, 0 is max imum saturation!
+// if invertValue is not set, 0 is maximum saturation!
 RgbFullColorCommand.prototype.saturation = function(zone, saturationValue, invertValue){
   var sn = Math.min(Math.max(saturationValue, 0x00), 0x64);
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
