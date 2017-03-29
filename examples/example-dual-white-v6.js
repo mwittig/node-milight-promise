@@ -7,7 +7,7 @@ var commands = require('../src/index').commandsV6;
 //    unexpected results. On Windows, global broadcast packets will only be routed via the first network adapter. If
 //    you want to use a broadcast address though, use a network-specific address, e.g. for `192.168.0.1/24` use
 //    `192.168.0.255`.
-// *  Note, for the V6 command set each command must be proevided with a zone parameter as shown in the example below!
+// *  Note, for the V6 command set each command must be provided with a zone parameter as shown in the example below!
 
 var light = new Milight({
     ip: "255.255.255.255",
