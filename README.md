@@ -2,6 +2,7 @@
 
 [![Npm Version](https://badge.fury.io/js/node-milight-promise.svg)](http://badge.fury.io/js/node-milight-promise)
 [![Build Status](https://travis-ci.org/mwittig/node-milight-promise.svg?branch=master)](https://travis-ci.org/mwittig/node-milight-promise)
+[![Dependency Status](https://david-dm.org/mwittig/node-milight-promise.svg)](https://david-dm.org/mwittig/node-milight-promise)
 [![Coverage Status](https://coveralls.io/repos/github/mwittig/node-milight-promise/badge.svg?branch=master)](https://coveralls.io/github/mwittig/node-milight-promise?branch=master)
 
 A node module to control Milight LED bulbs and OEM equivalents such as Rocket LED, Limitless LED Applamp, 
@@ -216,7 +217,7 @@ var commands = require('../src/index').commandsV6;
 //    unexpected results. On Windows, global broadcast packets will only be routed via the first network adapter. If
 //    you want to use a broadcast address though, use a network-specific address, e.g. for `192.168.0.1/24` use
 //    `192.168.0.255`.
-// *  Note, for the v6 command set each command must be proevided with a zone parameter as shown in the example below!
+// *  Note, for the v6 command set each command must be provided with a zone parameter as shown in the example below!
 
 var light = new Milight({
     ip: "255.255.255.255",
