@@ -27,7 +27,7 @@ module.exports = function (options) {
     return new Promise(function (resolve, reject) {
         var discoverer = dgram.createSocket('udp4');
         discoverer.bind(function () {
-            helper.debug("Milight: Discovery socket openend");
+            helper.debug("Milight: Discovery socket opened");
             discoverer.setBroadcast(true);
         });
 
