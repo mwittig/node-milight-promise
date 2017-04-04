@@ -1,5 +1,9 @@
 # Release History
 
+* 20170404, V0.1.2
+    * Fixed fullColor.rgb() using wrong color circle, issue #18
+    * Added dependency badge
+    * Fixed some typos
 * 20170316, V0.1.1
     * Added invertValue parameter to full color saturation command. This may be set to true to get a proper 
       percentage saturation. Note, the native Milight saturation value is inverted, where 0 is maximum saturation.
