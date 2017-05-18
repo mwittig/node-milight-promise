@@ -110,7 +110,7 @@ RgbwCommand.prototype.rgb255 = function(zone, r, g, b) {
 RgbwCommand.prototype.effectMode = function(zone, mode) {
   // values 0x01 to 0x09
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
-  var mn = Math.min(Math.max(zone, 0x01), 0x09);
+  var mn = Math.min(Math.max(mode, 0x01), 0x09);
   return [0x31, 0x00, 0x00, 0x07, 0x04, mn, 0x00, 0x00, 0x00, zn]
 };
 
