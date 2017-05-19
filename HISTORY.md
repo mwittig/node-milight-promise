@@ -1,5 +1,7 @@
 # Release History
 
+* 20170520, V0.1.3
+    * Fixed RGBW effectMode V6 command, thanks @RobinBol
 * 20170404, V0.1.2
     * Fixed fullColor.rgb() using wrong color circle, issue #18
     * Added dependency badge
