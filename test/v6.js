@@ -136,6 +136,15 @@ describe("Testing transmission of control sequences", function () {
     done();
   });
 
+  it("shall provide bulb command objects", function (done) {
+    expect(index.commandsV6.bridge).toBeDefined();
+    expect(index.commandsV6.rgbw).toBeDefined();
+    expect(index.commandsV6.white).toBeDefined();
+    expect(index.commandsV6.fullColor).toBeDefined();
+    expect(index.commandsV6.rgb).toBeDefined();
+    done();
+  });
+
   it("shall transform HSV hue to milight hue", function (done) {
     expect(index.helper.hsvToMilightColor([359, 0, 0])).toBe(178);
     done();
@@ -379,7 +388,9 @@ describe("Testing transmission of control sequences", function () {
       };
       Promise.reduce(
           [/*"allOn", "allOff",*/
-            "effectModeNext","effectSpeedUp", "effectSpeedDown", "link", "unlink"
+            "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+            "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+            "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
           ], test, 0
       ).finally(function () {
           done();
@@ -498,7 +509,7 @@ describe("Testing transmission of control sequences", function () {
       )
     };
     Promise.reduce(
-      ["nightMode", "whiteMode", "on", "off"], test, 0
+      ["on", "off", "nightMode", "whiteMode"], test, 0
     ).finally(function () {
       done();
     })
@@ -540,6 +551,37 @@ describe("Testing transmission of control sequences", function () {
     var test = function(total, args) {
       var innerCalls = [
         commands.fullColor.hue.apply(commands.fullColor, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command rgbww/cw saturation", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 50],
+      [1, 100]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor.saturation.apply(commands.fullColor, args)
       ];
       var innerTest = function(total, command) {
         expect(command).toBeDefined();
@@ -708,6 +750,8 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       [/*"allOn", "allOff",*/
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
         "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
       ], test, 0
     ).finally(function () {
@@ -793,8 +837,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       [
-        "on", "off", "effectModeUp", "effectModeDown", "effectModeNext", "effectSpeedUp",
-        "effectSpeedDown", "brightUp", "brightDown", "link", "unlink"
+        "on", "off", "effectModeUp", "effectModeDown",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectSpeedUp", "effectSpeedDown", "brightUp", "brightDown", "link", "unlink"
       ], test, 0
     ).finally(function () {
       done();
