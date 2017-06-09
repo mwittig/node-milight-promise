@@ -237,9 +237,8 @@ RgbFullColorCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
 
 RgbFullColorCommand.prototype.rgb = function(zone, r, g, b) {
   var hsv=helper.rgbToHsv(r, g, b);
-  var hue = (hsv[0] == 0)?0xB0:hsv[0] * 0xFF % 0x167;
   return [
-    this.hue(zone, hue, true),
+    this.hue(zone, helper.hsvToMilightColor(hsv), true),
     this.saturation(zone, hsv[1], true),
     this.brightness(zone, hsv[2])
   ]
