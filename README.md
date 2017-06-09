@@ -339,6 +339,9 @@ please drop me a link by creating an issue.
 
 * [limitless-pushbullet](https://www.npmjs.com/package/limitless-pushbullet) - make your lights blink when 
   you receive a pushbullet notification
+  
+* [MiLight ibox-support for Homey (dev)](https://github.com/athombv/com.milight/tree/ibox-support) - connect 
+  your MiLight (EasyBulb) light bulbs with [Athom Homey](https://www.athom.com)
 
 ### Articles
 
