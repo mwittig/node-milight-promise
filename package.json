@@ -33,13 +33,13 @@
     "LED"
   ],
   "dependencies": {
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.0",
     "promise-retryer": "0.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-coveralls": "^0.1.4",
-    "gulp-istanbul": "^1.1.1",
+    "gulp-istanbul": "^1.1.2",
     "gulp-jasmine": "^2.4.2",
     "gulp-plumber": "^1.1.0",
     "gulp-print": "^2.0.1",
