@@ -379,10 +379,8 @@ describe("Testing transmission of control sequences", function () {
       };
       Promise.reduce(
           [/*"allOn", "allOff",*/
-            "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-            "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-            "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-            "effectSpeedUp", "effectSpeedDown"], test, 0
+            "effectModeNext","effectSpeedUp", "effectSpeedDown", "link", "unlink"
+          ], test, 0
       ).finally(function () {
           done();
       })
@@ -710,10 +708,8 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       [/*"allOn", "allOff",*/
-        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
-        "effectSpeedUp", "effectSpeedDown"], test, 0
+        "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
+      ], test, 0
     ).finally(function () {
       done();
     })
@@ -769,7 +765,9 @@ describe("Testing transmission of control sequences", function () {
       )
     };
     Promise.reduce(
-      [/*"allOn", "allOff",*/ "warmer", "cooler", "brightUp", "brightDown"], test, 0
+      [/*"allOn", "allOff",*/
+        "warmer", "cooler", "brightUp", "brightDown", "link", "unlink"
+      ], test, 0
     ).finally(function () {
       done();
     })
@@ -778,7 +776,7 @@ describe("Testing transmission of control sequences", function () {
   it("shall receive the rgb command", function (done) {
     var test = function(total, commandName) {
       var innerCalls = [
-        commands.rgb[commandName]()
+        commands.rgb[commandName](1)
       ];
       var innerTest = function(total, command) {
         return light.sendCommands(command)
@@ -794,8 +792,10 @@ describe("Testing transmission of control sequences", function () {
       )
     };
     Promise.reduce(
-      ["on", "off", "effectModeUp", "effectModeDown", "effectModeNext", "effectSpeedUp",
-        "effectSpeedDown", "brightUp", "brightDown"], test, 0
+      [
+        "on", "off", "effectModeUp", "effectModeDown", "effectModeNext", "effectSpeedUp",
+        "effectSpeedDown", "brightUp", "brightDown", "link", "unlink"
+      ], test, 0
     ).finally(function () {
       done();
     })
