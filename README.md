@@ -38,6 +38,7 @@ Support for the v6 bridge includes the following features:
 * control for multiple bridges
 * bridge discovery
 * support for unicast and broadcast communication
+* link/unlink bulbs to/from a given zone
 
 ### Breaking and Notable Changes
 
@@ -76,6 +77,12 @@ To my surprise, the color model of the v6.0 bridge protocol is different to the 
 To cut a long story short I have integrated an optional transformation feature to the hue command for bridge and rgbw 
  to optionally support the legacy color wheel. This might be useful for applications which provide controls
  for the legacy color wheel like the plugin for pimatic does.
+ 
+### Pairing - Link/Unlink Bulbs
+
+According to my findings a bulb can only be linked to single zone of a v6.0 bridge. The link/unlink commands can be used 
+ for pairing within a short time window of about three seconds after powering up the bulb. If a bulb has not been paired
+ yet, calling the on() command a few times after powering up the bulb will also link the bulb to the given zone.
 
 ## Notable features for Legacy Bridges
 
