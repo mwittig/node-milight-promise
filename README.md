@@ -81,8 +81,16 @@ To cut a long story short I have integrated an optional transformation feature t
 ### Pairing - Link/Unlink Bulbs
 
 According to my findings a bulb can only be linked to single zone of a v6.0 bridge. The link/unlink commands can be used 
- for pairing within a short time window of about three seconds after powering up the bulb. If a bulb has not been paired
- yet, calling the on() command a few times after powering up the bulb will also link the bulb to the given zone.
+ for pairing within a short time window of about five seconds after powering up the bulb. If a bulb has not been paired
+ yet, calling the on() command a few times after powering up the bulb will also link the bulb to the given zone. 
+ 
+The following visual feedback is provided when pairing full color RGB bulbs:
+ * Flashing red light: The unlink command has been received. Flashing will stop after five seconds.
+ * Flashing green light: The link command has been received and pairing is in progress. Pairing mode will stop 
+   after 5 seconds and light will turn to red.
+ * Constant red light: The bulb is either not linked to a bridge or it has been linked to a zone, but no further command
+   has been received yet.
+
 
 ## Notable features for Legacy Bridges
 
