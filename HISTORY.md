@@ -1,9 +1,13 @@
 # Release History
 
+* 20170610, V0.1.4
+    * Added V6 link/unlink commands to support V6 pairing protocol, issue #21
+    * Bug fix: Fixed fullColor.rgb() giving wrong colors
+    * Dependency update
 * 20170520, V0.1.3
     * Fixed RGBW effectMode V6 command, thanks @RobinBol
 * 20170404, V0.1.2
-    * Fixed fullColor.rgb() using wrong color circle, issue #18
+    * Bug fix: Fixed fullColor.rgb() using wrong color circle, issue #18
     * Added dependency badge
     * Fixed some typos
 * 20170316, V0.1.1
