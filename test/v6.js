@@ -509,7 +509,43 @@ describe("Testing transmission of control sequences", function () {
       )
     };
     Promise.reduce(
-      ["on", "off", "nightMode", "whiteMode"], test, 0
+      [
+        "on", "off", "nightMode", "whiteMode",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectSpeedUp", "effectSpeedDown"
+      ], test, 0
+    ).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command bridge effectMode", function (done) {
+    var calls = [
+      [1],
+      [5],
+      [9]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.bridge.effectMode.apply(commands.bridge, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
     ).finally(function () {
       done();
     })
