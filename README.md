@@ -50,11 +50,11 @@ The old command interface should work as is with the following exception:
   
 There are also some subtle, notable changes of the default behaviour:
 
-* the default for `commandRepeat`has been changed to `1` to provide consistent operation for all modes (WW/CW bulbs 
+* the default for `commandRepeat` has been changed to `1` to provide consistent operation for all modes (WW/CW bulbs 
   with legacy bridges in particular). Note, beyond, a higher value does not make much sense for the v6 bridge 
   as the flow control strategy will automatically resend messages as required (if no receipt received)
   
-* the default for `delayBetweenCommands`has been changed to `100` ms to provide consistent operation for all modes. 
+* the default for `delayBetweenCommands` has been changed to `100` ms to provide consistent operation for all modes. 
   According to my findings a more aggressive timing is possible with the legacy bridges depending on condition of the 
   LAN (quality of the wireless link and router physics).  
 
