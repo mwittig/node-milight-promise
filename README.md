@@ -91,6 +91,11 @@ The following visual feedback is provided when pairing full color RGB bulbs:
  * Constant red light: The bulb is either not linked to a bridge or it has been linked to a zone, but no further command
    has been received yet.
 
+### Effect Mode
+
+Using the effect mode (1 to 9) will not turn the device. Thus, make sure the device is on before setting the 
+ effect mode. To disable the effect mode you can set the white mode or choose a color. Note, switching off will not 
+ disable the effect mode.
 
 ## Notable features for Legacy Bridges
 
@@ -357,6 +362,9 @@ please drop me a link by creating an issue.
   
 * [MiLight ibox-support for Homey (dev)](https://github.com/athombv/com.milight/tree/ibox-support) - connect 
   your MiLight (EasyBulb) light bulbs with [Athom Homey](https://www.athom.com)
+  
+* [milights-bridge](https://github.com/KevinVR/milights-bridge) - a remote control application for your 
+  Milight lights. It provides a device agnostic Web UI as well as an API for third-party applications.
 
 ### Articles
 
