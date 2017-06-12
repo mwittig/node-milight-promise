@@ -51,6 +51,30 @@ BridgeLEDCommands.prototype.rgb = function(r, g, b) {
   return this.hue(helper.rgbToHue(r, g, b), true)
 };
 
+var bridgeModeNext=0x00;
+BridgeLEDCommands.prototype.effectMode = function(mode) {
+  // values 0x01 to 0x09
+  bridgeModeNext = mode;
+  var mn = Math.min(Math.max(mode, 0x01), 0x09);
+  return [0x31, 0x00, 0x00, 0x00, 0x04, mn, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.effectModeNext = function() {
+  bridgeModeNext += 0x01;
+  if (bridgeModeNext > 0x09) {
+    bridgeModeNext = 0x01;
+  }
+  return [0x31, 0x00, 0x00, 0x00, 0x04, bridgeModeNext, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.effectSpeedUp = function(){
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x02, 0x00, 0x00, 0x00, 0x01]
+};
+
+BridgeLEDCommands.prototype.effectSpeedDown = function(){
+  return [0x31, 0x00, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00, 0x00, 0x01]
+};
+
 //
 // RGBWW commands
 //
@@ -103,14 +127,15 @@ RgbwCommand.prototype.rgb255 = function(zone, r, g, b) {
   return this.rgb(zone, r, g, b);
 };
 
+var modeNext=0x00;
 RgbwCommand.prototype.effectMode = function(zone, mode) {
   // values 0x01 to 0x09
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
   var mn = Math.min(Math.max(mode, 0x01), 0x09);
+  modeNext = mn;
   return [0x31, 0x00, 0x00, 0x07, 0x04, mn, 0x00, 0x00, 0x00, zn]
 };
 
-var modeNext=0x00;
 RgbwCommand.prototype.effectModeNext = function(zone) {
   modeNext += 1;
   if (modeNext > 0x09) {
@@ -256,13 +281,16 @@ RgbFullColorCommand.prototype.rgb = function(zone, r, g, b) {
   ]
 };
 
+var fc_modeNext=0x00;
 RgbFullColorCommand.prototype.effectMode = function(zone, mode) {
-  return [0x31, 0x00, 0x00, 0x08, 0x06, mode, 0x00, 0x00, 0x00, zone]
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  var mn = Math.min(Math.max(mode, 0x01), 0x09);
+  fc_modeNext = mn;
+  return [0x31, 0x00, 0x00, 0x08, 0x06, mn, 0x00, 0x00, 0x00, zn]
 };
 
-var fc_modeNext=0x00;
 RgbFullColorCommand.prototype.effectModeNext = function(zone) {
-  fc_modeNext += 1;
+  fc_modeNext += 0x01;
   if (fc_modeNext > 0x09) {
     fc_modeNext = 0x01;
   }
