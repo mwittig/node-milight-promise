@@ -93,7 +93,7 @@ The following visual feedback is provided when pairing full color RGB bulbs:
 
 ### Effect Mode
 
-Using the effect mode (1 to 9) will not turn the device. Thus, make sure the device is on before setting the 
+Using the effect mode (1 to 9) will not turn on the device. Thus, make sure the device is on before setting the 
  effect mode. To disable the effect mode you can set the white mode or choose a color. Note, switching off will not 
  disable the effect mode.
 
