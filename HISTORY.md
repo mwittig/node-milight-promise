@@ -1,5 +1,7 @@
 # Release History
 
+* 20170612, V0.1.5
+    * Added effect mode commands for bridge light
 * 20170610, V0.1.4
     * Added V6 link/unlink commands to support V6 pairing protocol, issue #21
     * Bug fix: Fixed fullColor.rgb() giving wrong colors
