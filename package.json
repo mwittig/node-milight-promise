@@ -44,7 +44,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-print": "^2.0.1",
     "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.5.4",
+    "gulp-replace": "^0.6.1",
     "lodash.flattendeep": "^4.4.0"
   }
 }
