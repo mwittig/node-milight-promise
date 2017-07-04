@@ -117,10 +117,25 @@ describe("Testing transmission of control sequences", function () {
         done();
     });
 
+    it("shall reject initialization if address is invalid", function (done) {
+      var myLight = new Milight({
+        ip: "1"
+      });
+      myLight.ready()
+        .then(function () {
+          expect(true).toBeFalsy();
+        })
+        .catch(function (error) {
+          expect(true).toBeTruthy();
+        })
+        .finally(function () {
+          myLight.close();
+          done();
+        })
+    }, 15000);
+
     it("shall receive the command rgbw on in broadcast mode", function (done) {
-        var myLight = new Milight({
-            commandRepeat: 1
-        });
+        var myLight = new Milight();
         var calls = [
             commands.rgbw.on(1),
             commands2.rgbw.on(1)
@@ -141,6 +156,29 @@ describe("Testing transmission of control sequences", function () {
             done();
         })
     });
+
+  it("shall ignore double close", function (done) {
+    var myLight = new Milight();
+    var calls = [
+      commands.rgbw.on(1)
+    ];
+    var test = function(total, command) {
+      return myLight.sendCommands(command)
+        .then(function () {
+          expect(bytesReceived.length).toBe(command.length);
+          expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(command));
+          bytesReceived = [];
+          total += bytesReceived.length
+        });
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).finally(function () {
+      myLight.close();
+      myLight.close();
+      done();
+    })
+  });
 
     it("shall receive the command rgbw brightness", function (done) {
         var calls = [
@@ -413,21 +451,45 @@ describe("Testing transmission of control sequences", function () {
 
     it("shall invoke the discovery function without options", function (done) {
         discoverBridges().then(function (results) {
-                expect(results.length).toBeGreaterThan(-1);
-            })
-            .finally(function () {
-                done();
-            });
+            expect(results.length).toBeGreaterThan(-1);
+        })
+        .finally(function () {
+            done();
+        });
     });
 
     it("shall invoke the discovery function with a specific address and port", function (done) {
         discoverBridges({address: "10.10.10.10", port: 4711}).then(function (results) {
-                expect(results.length).toBe(0);
-            })
-            .finally(function () {
-                done();
-            });
+            expect(results.length).toBe(0);
+        })
+        .finally(function () {
+            done();
+        });
     });
+
+    it("shall return discovery with an error if address is set to an invalid value", function (done) {
+        discoverBridges({address: 1, port: 4711}).then(function (results) {
+          expect(true).toBeFalsy();
+        })
+        .catch(function (error) {
+          expect(error instanceof TypeError).toBeTruthy();
+        })
+        .finally(function () {
+            done();
+        });
+    });
+
+  it("shall invoke the discovery function with an invalid address", function (done) {
+    discoverBridges({address: "1", type: 'v6'}).then(function (results) {
+      expect(true).toBeFalsy();
+    })
+      .catch(function (error) {
+        expect(true).toBeTruthy();
+      })
+      .finally(function () {
+        done();
+      });
+  });
 
     it("shall invoke the discovery function with a shorter timeout", function (done) {
         discoverBridges({timeout: 1000}).then(function (results) {

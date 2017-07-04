@@ -128,6 +128,19 @@ describe("Testing transmission of control sequences", function () {
       });
   });
 
+  it("shall shall timeout if no response from server", function (done) {
+    light._rpc([0x00, 0xFF, 0x00])
+      .then(function() {
+        expect(true).toBeFalsy();
+      })
+      .catch(function (error) {
+        expect(true).toBeTruthy();
+      })
+      .finally(function () {
+        done();
+      });
+  });
+
   it("shall provide module exports", function (done) {
     expect(index.MilightController).toBeDefined();
     expect(index.discoverBridges).toBeDefined();
@@ -142,6 +155,24 @@ describe("Testing transmission of control sequences", function () {
     expect(index.commandsV6.white).toBeDefined();
     expect(index.commandsV6.fullColor).toBeDefined();
     expect(index.commandsV6.rgb).toBeDefined();
+    done();
+  });
+
+  it("shall throw TypeError if assign is called with undefined target", function (done) {
+    try {
+      index.helper.assign();
+      expect(true).toBeFalsy();
+    }
+    catch (e) {
+      expect(e instanceof TypeError).toBeTruthy();
+    }
+    done();
+  });
+
+  it("shall shall silently skip if assign is called with undefined source", function (done) {
+    var a = {};
+    index.helper.assign(a, {a: 1}, undefined, {b: 1})
+    expect(a.a === 1 && a.b === 1).toBeTruthy();
     done();
   });
 
@@ -183,7 +214,7 @@ describe("Testing transmission of control sequences", function () {
           total += bytesReceived.length
         });
     };
-    myLight._initialized.then(function() {
+    myLight.ready().then(function() {
       Promise.reduce(
         calls, test, 0
       ).finally(function () {
@@ -193,9 +224,29 @@ describe("Testing transmission of control sequences", function () {
     });
   });
 
+  it("shall reject initialization if address is invalid", function (done) {
+
+    var myLight = new Milight({
+      type: 'v6',
+      ip: "1"
+    });
+    myLight.ready()
+      .then(function () {
+        expect(true).toBeFalsy();
+      })
+      .catch(function (error) {
+        expect(true).toBeTruthy();
+      })
+      .finally(function () {
+        myLight.close();
+        done();
+      })
+  }, 15000);
+
   it("shall receive the command rgbw on in broadcast mode", function (done) {
     var myLight = new Milight({
-      type: 'v6'
+      type: 'v6',
+      fullSync: false
     });
     var calls = [
       commands.rgbw.on(1),
@@ -210,7 +261,7 @@ describe("Testing transmission of control sequences", function () {
           total += bytesReceived.length
         });
     };
-    myLight._initialized.then(function() {
+    myLight.ready().then(function() {
       Promise.reduce(
         calls, test, 0
       ).finally(function () {
@@ -952,35 +1003,59 @@ describe("Testing transmission of control sequences", function () {
 
   it("shall invoke the discovery function without options", function (done) {
     discoverBridges({type: 'v6'}).then(function (results) {
-        expect(results.length).toBeGreaterThan(-1);
-      })
-      .finally(function () {
-        done();
-      });
+      expect(results.length).toBeGreaterThan(-1);
+    })
+    .finally(function () {
+      done();
+    });
   });
 
   it("shall invoke the discovery function with a specific address and port", function (done) {
     discoverBridges({address: "10.10.10.10", port: 4711, type: 'v6'}).then(function (results) {
-        expect(results.length).toBe(0);
-      })
-      .finally(function () {
-        done();
-      });
+      expect(results.length).toBe(0);
+    })
+    .finally(function () {
+      done();
+    });
+  });
+
+  it("shall return discovery with an error if address is set to an invalid value", function (done) {
+    discoverBridges({address: 1, port: 4711, type: 'v6'}).then(function (results) {
+      expect(true).toBeFalsy();
+    })
+    .catch(function (error) {
+      expect(error instanceof TypeError).toBeTruthy();
+    })
+    .finally(function () {
+      done();
+    });
   });
 
   it("shall invoke the discovery function with a shorter timeout", function (done) {
     discoverBridges({timeout: 1000, type: 'v6'}).then(function (results) {
-        expect(results.length).toBeGreaterThan(-1);
-      })
-      .finally(function () {
-        done();
-      });
+      expect(results.length).toBeGreaterThan(-1);
+    })
+    .finally(function () {
+      done();
+    });
+  });
+
+  it("shall return discovery with an error if address is set to an invalid value", function (done) {
+    discoverBridges({address: 1, type: 'v6'}).then(function (results) {
+      expect(true).toBeFalsy();
+    })
+    .catch(function (error) {
+      expect(true).toBeTruthy();
+    })
+    .finally(function () {
+      done();
+    });
   });
 
   it("shall invoke the discovery function with an invalid address", function (done) {
-    discoverBridges({address: 1, type: 'v6'}).then(function (results) {
-        expect(true).toBeFalsy();
-      })
+    discoverBridges({address: "1", type: 'v6'}).then(function (results) {
+      expect(true).toBeFalsy();
+    })
       .catch(function (error) {
         expect(true).toBeTruthy();
       })
@@ -991,13 +1066,13 @@ describe("Testing transmission of control sequences", function () {
 
   it("shall invoke the discovery function and get a result", function (done) {
     discoverBridges({address: "localhost", port: PORT, type: 'v6'}).then(function (results) {
-        expect(results.length).toBe(1);
-      })
-      .catch(function (error) {
-        expect(true).toBeTruthy();
-      })
-      .finally(function () {
-        done();
-      });
+      expect(results.length).toBe(1);
+    })
+    .catch(function (error) {
+      expect(true).toBeTruthy();
+    })
+    .finally(function () {
+      done();
+    });
   });
 });
