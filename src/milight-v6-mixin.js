@@ -30,9 +30,9 @@ var milightV6Mixin = function() {
 
   this._createSession = function() {
     var self = this;
-    return self._lastRequest = helper.settlePromise(self._lastRequest).then(function () {
+    return self._synchronize.settlePromise(function () {
 
-      return self._awaitSessionInitialized = new Promise(function (resolve, reject) {
+      return new Promise(function (resolve, reject) {
         self._rpc([
           0x20, 0x00, 0x00, 0x00, 0x16, 0x02, 0x62, 0x3A,
           0xD5, 0xED, 0xA3, 0x01, 0xAE, 0x08, 0x2D, 0x46,
@@ -41,7 +41,7 @@ var milightV6Mixin = function() {
         ]).then(function (response) {
           self._sessionId = response.slice(19, 21);
           helper.debug('Session Id: ' + helper.buffer2hex(self._sessionId));
-          Promise.delay(self._delayBetweenCommands).then(function () {
+          Promise.delay(self.delayBetweenCommands).then(function () {
             resolve(self._sessionId)
           })
         }).catch(function (error) {
@@ -75,7 +75,7 @@ var milightV6Mixin = function() {
     return this._rpc(
       [].concat(0x80, 0x00, 0x00, 0x00, 0x11, this._sessionId,
         0x00, this._sequenceNumber, 0x00, byteArray, 0x00));
-  };
+  }.bind(this);
 
   this._rpc = function (byteArray) {
     return retry.run({
@@ -99,7 +99,7 @@ var milightV6Mixin = function() {
     var buffer = new Buffer(calcChecksum(byteArray)),
       self = this;
 
-    return self._sendRequest = helper.settlePromise(self._sendRequest).then(function () {
+    return this._sendRequest = helper.settlePromise(this._sendRequest).then(function () {
 
       return new Promise(function (resolve, reject) {
         self._createSocket().then(function () {
@@ -128,7 +128,7 @@ var milightV6Mixin = function() {
                     timeoutId = null;
                     self.remoteAddress = remote.address;
                     helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
-                    Promise.delay(self._delayBetweenCommands).then(function () {
+                    Promise.delay(self.delayBetweenCommands).then(function () {
                       var result = Array.from(message);
                       helper.debug('ready for next command');
                       return resolve(result);
@@ -149,11 +149,20 @@ var milightV6Mixin = function() {
   this._init = function () {
     this._sessionId = [0xFF, 0xFF];
     this._sequenceNumber = 4;
-    this._awaitSessionInitialized = this._lastRequest;
     this._sessionTimeoutObject = null;
-    this._createSession();
-    this._scheduleSessionUpdate();
-    return Promise.resolve();
+    return new Promise(function (resolve, reject) {
+      helper.debug("Establishing new session");
+      this._createSession()
+        .then(function () {
+          helper.debug("Session initialized");
+          this._scheduleSessionUpdate();
+          resolve();
+        }.bind(this))
+        .catch(function (error) {
+          helper.debug("Session failed:", error);
+          reject(error);
+        })
+    }.bind(this));
   };
 
   this._close = function () {

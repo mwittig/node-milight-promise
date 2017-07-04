@@ -4,13 +4,37 @@ var helper = require('./helper');
 var milightLegacyMixin = require('./milight-legacy-mixin');
 var milightV6Mixin = require('./milight-v6-mixin');
 
-const
-    DEFAULT_IP = '255.255.255.255',
-    DEFAULT_PORT = 8899,
-    DEFAULT_PORT_V6 = 5987,
-    DEFAULT_KEEP_ALIVE_V6 = true,
-    DEFAULT_COMMAND_DELAY = 100,
-    DEFAULT_COMMAND_REPEAT = 1;
+const v4Defaults = {
+  ip: '255.255.255.255',
+  port: 8899,
+  delayBetweenCommands: 100,
+  commandRepeat: 1,
+  fullSync: true,
+  type: 'v4'
+};
+const v6Defaults = {
+  ip: '255.255.255.255',
+  port: 5987,
+  delayBetweenCommands: 100,
+  commandRepeat: 1,
+  fullSync: true,
+  sendKeepAlives: true
+};
+
+//
+// Class MilightSynchronizationHandler
+//
+
+var MilightSynchronizationHandler= function () {
+  this._lastRequest = Promise.resolve();
+};
+
+MilightSynchronizationHandler.prototype.settlePromise = function (func) {
+  return this._lastRequest =  helper.settlePromise(this._lastRequest).then(func)
+};
+
+var _synchronize = new MilightSynchronizationHandler();
+
 
 //
 // Class MilightController
@@ -22,32 +46,24 @@ const
  * @constructor
  */
 var MilightController = function (options) {
-    options = options || {};
+  var settings = options || {};
 
-    this.type = options.type;
-    this.ip = options.ip || DEFAULT_IP;
-    if (this.type === 'v6') {
-        milightV6Mixin.call(this);
-        this.port = options.port || DEFAULT_PORT_V6;
-        this.sendKeepAlives = options.sendKeepAlives || DEFAULT_KEEP_ALIVE_V6;
-    }
-    else {
-        milightLegacyMixin.call(this);
-        this.port = options.port || DEFAULT_PORT;
-    }
-    this._delayBetweenCommands = options.delayBetweenCommands || DEFAULT_COMMAND_DELAY;
-    this._broadcastMode = options.broadcastMode || this.ip.split('.').pop().trim() === '255';
-    this._commandRepeat = options.commandRepeat || DEFAULT_COMMAND_REPEAT;
-    this._socketInit = Promise.resolve();
-    this._lastRequest = this._createSocket();
-    this._sendRequest = Promise.resolve();
-    helper.debug(JSON.stringify({
-        ip: this.ip,
-        port: this.port,
-        delayBetweenCommands: this._delayBetweenCommands,
-        commandRepeat: this._commandRepeat
-    }));
-    this._initialized = this._init();
+  if (settings.type === 'v6') {
+    helper.assign(this, v6Defaults, settings);
+    milightV6Mixin.call(this);
+  }
+  else {
+    helper.assign(this, v4Defaults, settings);
+    milightLegacyMixin.call(this);
+  }
+  this.broadcastMode = this.broadcastMode || this.ip.split('.').pop().trim() === '255';
+  helper.debug(JSON.stringify(helper.assign({}, this)));
+  this._socketInit = Promise.resolve();
+  this._synchronize = this.fullSync ? _synchronize : new MilightSynchronizationHandler();
+  this._sendRequest = Promise.resolve();
+  this._initialized = new Promise(function (resolve, reject) {
+    this._createSocket().bind(this).then(this._init).then(resolve).catch(reject)
+  }.bind(this))
 };
 
 //
@@ -55,32 +71,32 @@ var MilightController = function (options) {
 //
 
 MilightController.prototype._createSocket = function () {
-    var self = this;
+  var self = this;
 
-    return helper.settlePromise(self._socketInit).then(function () {
+  return helper.settlePromise(self._socketInit).then(function () {
 
-        return self._socketInit = new Promise(function (resolve, reject) {
-            if (self.clientSocket) {
-                return resolve();
-            }
-            else {
-                helper.debug("initializing socket");
-                var socket = dgram.createSocket('udp4');
+    return self._socketInit = new Promise(function (resolve, reject) {
+      if (self.clientSocket) {
+        return resolve();
+      }
+      else {
+        helper.debug("initializing socket");
+        var socket = dgram.createSocket('udp4');
 
-                socket.bind(function () {
-                    self.clientSocket = socket;
-                    if (self._broadcastMode) {
-                        socket.setBroadcast(true);
-                        helper.debug("initializing socket (broadcast mode) done");
-                    }
-                    else {
-                        helper.debug("initializing socket done");
-                    }
-                    return resolve();
-                })
-            }
-        });
+        socket.bind(function () {
+          self.clientSocket = socket;
+          if (self.broadcastMode) {
+            socket.setBroadcast(true);
+            helper.debug("initializing socket (broadcast mode) done");
+          }
+          else {
+            helper.debug("initializing socket done");
+          }
+          return resolve();
+        })
+      }
     });
+  });
 };
 
 
@@ -94,34 +110,36 @@ MilightController.prototype._createSocket = function () {
  * @returns {*}
  */
 MilightController.prototype.sendCommands = function (varArgArray) {
-    var stackedCommands = [],
-        varArgs = arguments,
-        self = this;
+  var stackedCommands = [],
+    varArgs = arguments,
+    self = this;
 
-    return self._lastRequest = helper.settlePromise(self._lastRequest).then(function () {
+  return this._initialized.then(function () {
+      return self._synchronize.settlePromise(function () {
 
         for (var i = 0; i < varArgs.length; i++) {
-            if (! (varArgs[i] instanceof Array)) {
-                return Promise.reject(new Error("Array arguments required"));
+          if (! (varArgs[i] instanceof Array)) {
+            return Promise.reject(new Error("Array arguments required"));
+          }
+          else {
+            var arg = varArgs[i];
+            if (((arg.length) > 0) && (arg[0] instanceof Array)) {
+              for (var j = 0; j < arg.length; j++) {
+                for (var r = 0; r < self.commandRepeat; r++) {
+                  stackedCommands.push(self._sendByteArray(arg[j]));
+                }
+              }
             }
             else {
-                var arg = varArgs[i];
-                if (((arg.length) > 0) && (arg[0] instanceof Array)) {
-                    for (var j = 0; j < arg.length; j++) {
-                        for (var r = 0; r < self._commandRepeat; r++) {
-                            stackedCommands.push(self._sendByteArray(arg[j]));
-                        }
-                    }
-                }
-                else {
-                    for (var r = 0; r < self._commandRepeat; r++) {
-                        stackedCommands.push(self._sendByteArray(arg));
-                    }
-                }
+              for (var r = 0; r < self.commandRepeat; r++) {
+                stackedCommands.push(self._sendByteArray(arg));
+              }
             }
+          }
         }
         return helper.settlePromises(stackedCommands)
-    });
+    })
+  })
 };
 
 
@@ -131,14 +149,16 @@ MilightController.prototype.sendCommands = function (varArgArray) {
  * @returns {*}
  */
 MilightController.prototype.pause = function (ms) {
-    var self = this;
-    ms = ms || 100;
+  var self = this;
+  ms = ms || 100;
 
-    return self._lastRequest = helper.settlePromise(self._lastRequest).then(function () {
-        return Promise.delay(ms).then(function() {
-            helper.debug("paused for", ms, "ms")
-        });
+  return this._initialized.then(function () {
+    return self._synchronize.settlePromise(function () {
+      return Promise.delay(ms).then(function() {
+        helper.debug("paused for", ms, "ms")
+      });
     })
+  });
 };
 
 
@@ -147,17 +167,29 @@ MilightController.prototype.pause = function (ms) {
  * @returns {*}
  */
 MilightController.prototype.close = function () {
-    var self = this;
+  var self = this;
 
-    return self._lastRequest = helper.settlePromise(self._lastRequest).then(function () {
-        if (self.clientSocket) {
-            self.clientSocket.close();
-            delete self.clientSocket;
-            helper.debug("socket closed");
-        }
-        return self._close();
+  return this._initialized.then(function () {
+    return self._synchronize.settlePromise(function () {
+      return self._close();
     })
+  }).catch(function (error) {
+    return self._close();
+  }).finally(function () {
+    if (self.clientSocket) {
+      self.clientSocket.close();
+      delete self.clientSocket;
+      helper.debug("socket closed");
+    }
+  })
 };
 
+/**
+ *
+ * @returns {*}
+ */
+MilightController.prototype.ready = function () {
+  return this._initialized
+};
 
 module.exports = MilightController;

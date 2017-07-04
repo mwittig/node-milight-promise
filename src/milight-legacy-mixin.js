@@ -10,7 +10,7 @@ var helper = require('./helper.js');
 var milightLegacyMixin = function() {
 
   this._init = function () {
-    return Promise.resolve();
+    return this._sendByteArray([]);
   };
 
   this._sendByteArray = function (byteArray) {
@@ -36,7 +36,7 @@ var milightLegacyMixin = function() {
               }
               else {
                 helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
-                return Promise.delay(self._delayBetweenCommands).then(function () {
+                return Promise.delay(self.delayBetweenCommands).then(function () {
                   return resolve();
                 });
               }
@@ -47,7 +47,7 @@ var milightLegacyMixin = function() {
         })
       })
     })
-  };
+  }.bind(this);
 
   this._close = function () {
     return Promise.resolve();

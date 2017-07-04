@@ -36,27 +36,29 @@ module.exports = function (options) {
                 if (typeof host !== "string") {
                     discoverer.emit('error', new TypeError("invalid arguments: IP address must be a string"));
                 }
-                var discovererCB = function(error, bytes) {
+                else {
+                  var discovererCB = function(error, bytes) {
                     if (error) {
-                        discoverer.emit('error', error);
+                      discoverer.emit('error', error);
                     }
                     else {
-                        helper.debug('UDP message sent to ' + host +':'+ port);
+                      helper.debug('UDP message sent to ' + host +':'+ port);
 
-                        timeoutId = setTimeout(function() {
-                            try {
-                                discoverer.close();
-                                helper.debug("Milight: Discovery socket closed");
-                            } catch (ex) {/*ignore*/}
-                            resolve(discoResults);
-                        }, timeout)
+                      timeoutId = setTimeout(function() {
+                        try {
+                          discoverer.close();
+                          helper.debug("Milight: Discovery socket closed");
+                        } catch (ex) {/*ignore*/}
+                        resolve(discoResults);
+                      }, timeout)
                     }
-                };
-                if (discoverLegacy) {
+                  };
+                  if (discoverLegacy) {
                     discoverer.send(discoveryMessageLegacy, 0, discoveryMessageLegacy.length, port, host, discovererCB);
-                }
-                if (discoverV6) {
+                  }
+                  if (discoverV6) {
                     discoverer.send(discoveryMessageV6, 0, discoveryMessageV6.length, port, host, discovererCB);
+                  }
                 }
             }
             catch (e) {
@@ -89,5 +91,5 @@ module.exports = function (options) {
             } catch (ex) {/*ignore*/}
             reject(error);
         });
-    });
+    }.bind(this));
 };

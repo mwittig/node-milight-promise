@@ -68,12 +68,34 @@ module.exports = {
     return Promise.all(promisesArray.map(function(promise) {
       return promise.reflect()
     }));
+  },
+
+  assign: function(target, vArgs) {
+    if (target == null) {
+      // TypeError if undefined or null
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+    var to = Object(target);
+
+    for (var index = 1; index < arguments.length; index++) {
+      var nextSource = arguments[index];
+      // Skip over nextSource if undefined or null
+      if (nextSource != null) {
+        for (var nextKey in nextSource) {
+          // Avoid bugs when hasOwnProperty is shadowed
+          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+    }
+    return to;
   }
 };
 
 function consoleDebug() {
   if (typeof arguments[0] == 'string') {
-    arguments[0] = 'Milight: ' + arguments[0]
+    arguments[0] = (new Date()).toISOString() + ' Milight: ' + arguments[0]
   }
   console.log.apply(this, arguments)
 }
