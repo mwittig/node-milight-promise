@@ -158,6 +158,30 @@ describe("Testing transmission of control sequences", function () {
     done();
   });
 
+  it("shall handle debug message at runtime", function (done) {
+    try {
+      if (process.env.hasOwnProperty('MILIGHT_DEBUG')) {
+        var debug = process.env.MILIGHT_DEBUG;
+        delete process.env.MILIGHT_DEBUG;
+        delete require.cache[require.resolve('../src/helper')];
+        require('../src/helper').debug();
+        process.env.MILIGHT_DEBUG = debug;
+      }
+      else {
+        process.env.MILIGHT_DEBUG = "";
+        delete require.cache[require.resolve('../src/helper')];
+        require('../src/helper').debug();
+        delete process.env.MILIGHT_DEBUG;
+      }
+      expect(true).toBeTruthy();
+    }
+    catch (e) {
+      console.log(e)
+      expect(e instanceof TypeError).toBeTruthy();
+    }
+    done();
+  });
+
   it("shall throw TypeError if assign is called with undefined target", function (done) {
     try {
       index.helper.assign();
