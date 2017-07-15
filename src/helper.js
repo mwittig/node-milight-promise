@@ -83,7 +83,7 @@ module.exports = {
       if (nextSource != null) {
         for (var nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
-          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey) && nextSource[nextKey] != null) {
             to[nextKey] = nextSource[nextKey];
           }
         }
