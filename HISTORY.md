@@ -1,5 +1,9 @@
 # Release History
 
+* 20170715, V0.2.0
+    * Added synchronization of Milight command across multiple Milight instances
+    * Dependency updates
+    * Added more tests, improved test coverage
 * 20170612, V0.1.5
     * Added effect mode commands for bridge light
 * 20170610, V0.1.4

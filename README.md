@@ -22,10 +22,21 @@ Earlier versions of Milight used a very primitive one-way communication protocol
 Contributions to the project are  welcome. You can simply fork the project and create a pull request with 
 your contribution to start with. If you like this plugin, please consider &#x2605; starring 
 [the project on github](https://github.com/mwittig/node-milight-promise).
+ 
+### What new / Version 0.2.x: Breaking and Notable Changes
 
-## What's new
+So far, synchronization of Milight commands had been performed for each Milight() instance, individually. This caused 
+ problems with some applications, which create multiple Milight() instances, for example, to manage different zones. 
+ In some cases, commands did not get sent in the expected order or commands event got dropped by Milight Controller. 
+ The current version should solve these issues by synchronizing commands across all instances. This also lays the 
+ ground for a higher layer command API I am planning to add in the future.
+ 
+If the new synchronization feature causes unexpected behavior it can be switched off as part of the configuration 
+ options for a milight instance (`fullSync: false`).
+ 
+### Version 0.1.x: Breaking and Notable Changes
 
-The current version includes support for the new WiFi Bridge protocol v6.0 (also referred to as "v6 bridge" by the 
+This version includes support for the new WiFi Bridge protocol v6.0 (also referred to as "v6 bridge" by the 
  project). Applications using the legacy should not be impacted, however I had to remove some supporting functions 
  to reduce code duplication (see Breaking Changes below).
 
@@ -39,8 +50,6 @@ Support for the v6 bridge includes the following features:
 * bridge discovery
 * support for unicast and broadcast communication
 * link/unlink bulbs to/from a given zone
-
-### Breaking and Notable Changes
 
 The old command interface should work as is with the following exception:
 
