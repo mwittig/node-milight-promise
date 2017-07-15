@@ -1,5 +1,7 @@
 # Release History
 
+* 20170715, V0.2.1
+    * Bug fix: Let helper.assign ignore undefined values
 * 20170715, V0.2.0
     * Added synchronization of Milight command across multiple Milight instances
     * Dependency updates
@@ -34,7 +36,7 @@
     * Changed default command delay and repeat values
     * Updated examples
 * 20160503, V0.0.8
-    * Bug fix: hue value not converted to hex in rgb.hue()
+    * Bug fix: Hue value not converted to hex in rgb.hue()
     * Bug fix: Fixed array value checks of MilightController
     * Bug fix: Close discovery socket on error
     * Improved error handling
