@@ -48,7 +48,8 @@ BridgeLEDCommands.prototype.hue = function(hue, enableLegacyColorWheel) {
 };
 
 BridgeLEDCommands.prototype.rgb = function(r, g, b) {
-  return this.hue(helper.rgbToHue(r, g, b), true)
+  var hsv = helper.rgbToHsv(r, g, b);
+  return this.hue(helper.hsvToMilightColor(hsv), true)
 };
 
 var bridgeModeNext=0x00;
