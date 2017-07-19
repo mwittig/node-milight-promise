@@ -236,7 +236,9 @@ describe("Testing transmission of control sequences", function () {
     it("shall send a stacked command", function (done) {
         var calls = [
             commands.rgbw.rgb255(255, 255, 255),
-            commands2.rgbw.rgb255(255, 255, 255)
+            commands2.rgbw.rgb255(255, 255, 255),
+            commands.rgbw.rgb(255, 255, 255),
+            commands2.rgbw.rgb(255, 255, 255)
         ];
         var test = function(total, command) {
             return light.sendCommands(command)

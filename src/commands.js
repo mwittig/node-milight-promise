@@ -29,10 +29,11 @@ var ColorRgbCmd  = function(){};
 //makes the rgb/rgbw/white variables globally available in NodeJS
 // for ex. use: commands.rgbw.hue(64);
 
-module.exports = { rgb: new ColorRgbCmd()
+var exports = { rgb: new ColorRgbCmd()
     ,rgbw: new ColorRgbwCmd()
     ,white: new WhiteCmd() };
 
+module.exports = exports;
 
 
 /*RGBW BULBS AND CONTROLLERS, 4-CHANNEL/ZONE MODELS */
@@ -116,11 +117,15 @@ ColorRgbwCmd.prototype.hsvToMilightColor=  function hsvToMilightColor(hsv)
  * @param b
  * @returns {*[]}
  */
-ColorRgbwCmd.prototype.rgb255 =  function (r, g, b) {
+ColorRgbwCmd.prototype.rgb255 = function (r, g, b) {
     var hsv = helper.rgbToHsv(r, g, b),
         hue = this.hue(this.hsvToMilightColor(hsv)),
         brightness = this.brightness(hsv[2]);
     return [hue, brightness];
+};
+
+ColorRgbwCmd.prototype.rgb = function (r, g, b) {
+  return exports.rgbw.rgb255.call(exports.rgbw, r, g, b);
 };
 
 /* DUAL WHITE BULBS & CONTROLLERS */
