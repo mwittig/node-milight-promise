@@ -56,6 +56,9 @@ var MilightController = function (options) {
     helper.assign(this, v4Defaults, settings);
     milightLegacyMixin.call(this);
   }
+  if (typeof this.ip !== 'string') {
+    throw new TypeError("property 'ip' must be a string")
+  }
   this.broadcastMode = this.broadcastMode || this.ip.split('.').pop().trim() === '255';
   helper.debug(JSON.stringify(helper.assign({}, this)));
   this._socketInit = Promise.resolve();
