@@ -45,4 +45,4 @@ gulp.task('build', function() {
         .pipe(gulp.dest('src'))
 });
 
-gulp.task('default', ['test']);
+gulp.task('default', ['build', 'test']);
