@@ -12,7 +12,7 @@ function calcChecksum(bytes) {
     // Calculate the modulo 256 checksum
     var sum = 0;
     for (var i = bytes.length - 11, l = bytes.length; i < l; i++) {
-      sum += bytes[i];
+      sum += Number(bytes[i]);
     }
 
     // compliment
