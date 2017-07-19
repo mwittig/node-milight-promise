@@ -1,5 +1,11 @@
 # Release History
 
+* 20170719, V0.2.2
+    * Bug fix: Fixed bridge.rgb() using wrong color circle
+    * Bug fix: Ensure v6 checksum calculation works correctly even if some bytes contains number strings
+    * Added type check for ip address property to Milight constructor
+    * Added alias rgbw.rgb() to legacy command set
+    * Changed default gulp task to include build task
 * 20170715, V0.2.1
     * Bug fix: Let helper.assign ignore undefined values
 * 20170715, V0.2.0
