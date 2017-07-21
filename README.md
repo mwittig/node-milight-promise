@@ -23,7 +23,7 @@ Contributions to the project are  welcome. You can simply fork the project and c
 your contribution to start with. If you like this plugin, please consider &#x2605; starring 
 [the project on github](https://github.com/mwittig/node-milight-promise).
  
-### What new / Version 0.2.x: Breaking and Notable Changes
+### What's new / Version 0.2.x: Breaking and Notable Changes
 
 So far, synchronization of Milight commands had been performed for each Milight() instance, individually. This caused 
  problems with some applications, which create multiple Milight() instances, for example, to manage different zones. 
