@@ -1,5 +1,9 @@
 # Release History
 
+* 20170721, V0.2.3
+    * Fixed travis build issue caused by gulp task synchronization issue (reverted 
+      change of gulp default task committed in the previous release)
+    * Fixed typo
 * 20170719, V0.2.2
     * Bug fix: Fixed bridge.rgb() using wrong color circle
     * Bug fix: Ensure v6 checksum calculation works correctly even if some bytes contains number strings
