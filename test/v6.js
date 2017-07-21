@@ -241,7 +241,10 @@ describe("Testing transmission of control sequences", function () {
     myLight.ready().then(function() {
       Promise.reduce(
         calls, test, 0
-      ).finally(function () {
+      ).catch(function (error) {
+        console.log(error);
+        expect(true).toBe(false)
+      }).finally(function () {
         myLight.close();
         done();
       })
@@ -288,7 +291,10 @@ describe("Testing transmission of control sequences", function () {
     myLight.ready().then(function() {
       Promise.reduce(
         calls, test, 0
-      ).finally(function () {
+      ).catch(function (error) {
+        console.log(error);
+        expect(true).toBe(false)
+      }).finally(function () {
         myLight.close();
         done();
       })
@@ -311,7 +317,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -345,7 +354,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -380,7 +392,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -406,7 +421,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       ["nightMode", "whiteMode", "on", "off"], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -437,7 +455,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -467,7 +488,10 @@ describe("Testing transmission of control sequences", function () {
             "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
             "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
           ], test, 0
-      ).finally(function () {
+      ).catch(function (error) {
+        console.log(error);
+        expect(true).toBe(false)
+      }).finally(function () {
           done();
       })
   });
@@ -492,7 +516,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -525,7 +552,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -559,7 +589,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -590,7 +623,10 @@ describe("Testing transmission of control sequences", function () {
         "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
         "effectModeNext", "effectSpeedUp", "effectSpeedDown"
       ], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -621,7 +657,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -645,7 +684,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -679,7 +721,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -710,7 +755,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -747,7 +795,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -773,7 +824,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       ["nightMode", "whiteMode", "on", "off"], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -804,7 +858,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -835,7 +892,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -865,7 +925,10 @@ describe("Testing transmission of control sequences", function () {
         "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
         "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
       ], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -895,7 +958,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       ["nightMode", "maxBright", "on", "off"], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -923,7 +989,10 @@ describe("Testing transmission of control sequences", function () {
       [/*"allOn", "allOff",*/
         "warmer", "cooler", "brightUp", "brightDown", "link", "unlink"
       ], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -953,7 +1022,10 @@ describe("Testing transmission of control sequences", function () {
         "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
         "effectModeNext", "effectSpeedUp", "effectSpeedDown", "brightUp", "brightDown", "link", "unlink"
       ], test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -983,7 +1055,10 @@ describe("Testing transmission of control sequences", function () {
     };
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -1020,7 +1095,10 @@ describe("Testing transmission of control sequences", function () {
     } catch (e) { console.log(e.stack())}
     Promise.reduce(
       calls, test, 0
-    ).finally(function () {
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     })
   });
@@ -1028,6 +1106,10 @@ describe("Testing transmission of control sequences", function () {
   it("shall invoke the discovery function without options", function (done) {
     discoverBridges({type: 'v6'}).then(function (results) {
       expect(results.length).toBeGreaterThan(-1);
+    })
+    .catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
     })
     .finally(function () {
       done();
@@ -1038,7 +1120,10 @@ describe("Testing transmission of control sequences", function () {
     discoverBridges({address: "10.10.10.10", port: 4711, type: 'v6'}).then(function (results) {
       expect(results.length).toBe(0);
     })
-    .finally(function () {
+    .catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
       done();
     });
   });
@@ -1058,6 +1143,10 @@ describe("Testing transmission of control sequences", function () {
   it("shall invoke the discovery function with a shorter timeout", function (done) {
     discoverBridges({timeout: 1000, type: 'v6'}).then(function (results) {
       expect(results.length).toBeGreaterThan(-1);
+    })
+    .catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
     })
     .finally(function () {
       done();
@@ -1080,12 +1169,12 @@ describe("Testing transmission of control sequences", function () {
     discoverBridges({address: "1", type: 'v6'}).then(function (results) {
       expect(true).toBeFalsy();
     })
-      .catch(function (error) {
-        expect(true).toBeTruthy();
-      })
-      .finally(function () {
-        done();
-      });
+    .catch(function (error) {
+      expect(true).toBeTruthy();
+    })
+    .finally(function () {
+      done();
+    });
   });
 
   it("shall invoke the discovery function and get a result", function (done) {

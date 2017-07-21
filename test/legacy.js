@@ -228,7 +228,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             calls, test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -251,7 +254,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             calls, test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -285,7 +291,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             calls, test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -311,7 +320,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             ["nightMode", "whiteMode", "on", "off"], test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -337,7 +349,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             ["allOn", "allOff", "effectModeNext", "effectSpeedUp", "effectSpeedDown"], test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -363,7 +378,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             ["nightMode", "maxBright", "on", "off"], test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -389,7 +407,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             ["allOn", "allOff", "warmer", "cooler", "brightUp", "brightDown"], test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -416,7 +437,10 @@ describe("Testing transmission of control sequences", function () {
         Promise.reduce(
             ["on", "off", "speedUp", "speedDown", "effectSpeedUp",
                 "effectSpeedDown", "brightUp", "brightDown"], test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -446,7 +470,10 @@ describe("Testing transmission of control sequences", function () {
         };
         Promise.reduce(
             calls, test, 0
-        ).finally(function () {
+        ).catch(function (error) {
+          console.log(error);
+          expect(true).toBe(false)
+        }).finally(function () {
             done();
         })
     });
@@ -496,6 +523,10 @@ describe("Testing transmission of control sequences", function () {
     it("shall invoke the discovery function with a shorter timeout", function (done) {
         discoverBridges({timeout: 1000}).then(function (results) {
                 expect(results.length).toBeGreaterThan(-1);
+            })
+            .catch(function (error) {
+              console.log(error);
+              expect(true).toBe(false)
             })
             .finally(function () {
                 done();
