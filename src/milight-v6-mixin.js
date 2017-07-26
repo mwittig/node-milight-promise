@@ -102,6 +102,8 @@ var milightV6Mixin = function() {
     return this._sendRequest = helper.settlePromise(this._sendRequest).then(function () {
 
       return new Promise(function (resolve, reject) {
+        var timeoutId = null;
+
         self._createSocket().then(function () {
           self._lastBytesSent = byteArray;
           self.clientSocket.send(buffer
@@ -116,9 +118,9 @@ var milightV6Mixin = function() {
               }
               else {
                 helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
-                var timeoutId = setTimeout(function() {
-                  self.clientSocket.removeListener('message', messageHandler);
+                timeoutId = setTimeout(function() {
                   timeoutId = null;
+                  self.clientSocket.removeListener('message', messageHandler);
                   helper.debug('no response timeout');
                   reject(new Error("no response timeout"))
                 }, (byteArray[0] === 0x80)?250:1000);
@@ -140,6 +142,10 @@ var milightV6Mixin = function() {
             }
           );
         }).catch(function (error) {
+          if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
           return reject(error);
         })
       })
