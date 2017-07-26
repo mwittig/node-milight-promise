@@ -1,5 +1,7 @@
 # Release History
 
+* 20170727, V0.2.31
+    * Bug fix: remove timer if exception is caught while rpc is in progress
 * 20170721, V0.2.3
     * Fixed travis build issue caused by gulp task synchronization issue (reverted 
       change of gulp default task committed in the previous release)
