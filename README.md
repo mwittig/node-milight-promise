@@ -344,6 +344,9 @@ please drop me a link by creating an issue.
 
 * [iobroker.milight](https://www.npmjs.com/package/iobroker.milight) - adapter for 
   [ioBroker](https://www.npmjs.com/package/iobroker)
+  
+* [ioBroker.milight-smart-light](https://github.com/Steiger04/ioBroker.milight-smart-light)- yet another adapter for 
+  [ioBroker](https://www.npmjs.com/package/iobroker)
 
 * [@homenet/plugin-milight](https://www.npmjs.com/package/@homenet/plugin-milight) - plugin for 
   [Homenet](https://www.npmjs.com/package/@homenet/core)
