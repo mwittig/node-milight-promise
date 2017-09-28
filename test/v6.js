@@ -201,7 +201,7 @@ describe("Testing transmission of control sequences", function () {
   });
 
   it("shall transform HEX to RGB", function (done) {
-    expect(index.helper.hexToRgb('#007aff')).toBe({r: 0, g: 122, b:255});
+    expect(index.helper.hexToRgb('#007aff')).toEqual({r: 0, g: 122, b:255});
     done();    
   });
 
