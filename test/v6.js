@@ -200,6 +200,11 @@ describe("Testing transmission of control sequences", function () {
     done();
   });
 
+  it("shall transform HEX to RGB", function (done) {
+    expect(index.helper.hexToRgb('#007aff')).toBe({r: 0, g: 122, b:255});
+    done();    
+  });
+
   it("shall transform HSV hue to milight hue", function (done) {
     expect(index.helper.hsvToMilightColor([359, 0, 0])).toBe(178);
     done();
