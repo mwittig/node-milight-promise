@@ -1,5 +1,7 @@
 # Release History
 
+* 20170929, V0.2.32
+    * Added hexToRgb helper function, thanks @msunjic98
 * 20170727, V0.2.31
     * Bug fix: remove timer if exception is caught while rpc is in progress
 * 20170721, V0.2.3
