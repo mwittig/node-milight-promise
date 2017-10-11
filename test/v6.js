@@ -154,6 +154,7 @@ describe("Testing transmission of control sequences", function () {
     expect(index.commandsV6.rgbw).toBeDefined();
     expect(index.commandsV6.white).toBeDefined();
     expect(index.commandsV6.fullColor).toBeDefined();
+    expect(index.commandsV6.fullColor8Zone).toBeDefined();
     expect(index.commandsV6.rgb).toBeDefined();
     done();
   });
@@ -930,6 +931,39 @@ describe("Testing transmission of control sequences", function () {
         "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
         "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
       ], test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  //
+  // 8-zone RGB+CCT commands
+  //
+
+  it("shall receive the 8-zone rgbww/cw command on zone 1", function (done) {
+    var test = function(total, commandName) {
+      var innerCalls = [
+        commands.fullColor8Zone[commandName](1)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      ["on", "off"], test, 0
     ).catch(function (error) {
       console.log(error);
       expect(true).toBe(false)

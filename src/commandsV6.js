@@ -3,6 +3,7 @@ var BridgeLEDCommands = function(){};
 var RgbwCommand = function(){};
 var WhiteCommand = function(){};
 var RgbFullColorCommand = function(){};
+var RgbFullColor8ZoneCommand = function(){};
 var RgbCommand = function(){};
 var color = 0x7A;
 var brightness = 0x32;
@@ -12,7 +13,8 @@ module.exports = {
   rgbw: new RgbwCommand(),
   white: new WhiteCommand(),
   fullColor: new RgbFullColorCommand(),
-  rgb: new RgbCommand()
+  rgb: new RgbCommand(),
+  fullColor8Zone: new RgbFullColor8ZoneCommand()
 };
 
 BridgeLEDCommands.prototype.on = function() {
@@ -211,6 +213,20 @@ WhiteCommand.prototype.link = function(zone){
 
 WhiteCommand.prototype.unlink = function(zone){
   return [0x3E, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, zone]
+};
+
+//
+// RGB+CCT 8-zone controller (
+//
+
+RgbFullColor8ZoneCommand.prototype.on = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x01, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColor8ZoneCommand.prototype.off = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x02, 0x00, 0x00, 0x00, zn]
 };
 
 //
