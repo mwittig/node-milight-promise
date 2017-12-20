@@ -57,4 +57,5 @@ light.ready().then(function() {
   console.log("Invocation of asynchronous Milight commands done");
 }).catch(function(error) {
   console.log(error);
+  light.close();
 });

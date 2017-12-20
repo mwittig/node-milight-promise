@@ -10,7 +10,7 @@ var commands = Milight.commandsV6;
 // *  Note, for the V6 command set each command must be provided with a zone parameter as shown in the example below!
 
 var light = new Milight.MilightController({
-    ip: "192.168.178.11",
+    ip: "255.255.255.255",
     type: 'v6'
   }),
   zone = 0;
