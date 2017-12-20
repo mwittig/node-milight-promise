@@ -18,7 +18,8 @@ const v6Defaults = {
   delayBetweenCommands: 100,
   commandRepeat: 1,
   fullSync: true,
-  sendKeepAlives: true
+  sendKeepAlives: true,
+  sessionTimeout: 30000
 };
 
 //

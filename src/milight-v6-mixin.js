@@ -64,7 +64,7 @@ var milightV6Mixin = function() {
     this._sessionTimeoutObject = setTimeout(function() {
       this._createSession();
       this._scheduleSessionUpdate();
-    }.bind(this), 300000);
+    }.bind(this), this.sessionTimeout);
   };
 
   this._sendByteArray = function (byteArray) {
