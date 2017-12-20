@@ -943,7 +943,143 @@ describe("Testing transmission of control sequences", function () {
   // 8-zone RGB+CCT commands
   //
 
-  it("shall receive the 8-zone rgbww/cw command on zone 1", function (done) {
+
+  it("shall receive the command8-zone rgbww/cw brightness", function (done) {
+    var calls = [
+      commands.fullColor8Zone.brightness(1, 100)
+    ];
+    var test = function(total, command) {
+      expect(command).toBeDefined();
+      return light.sendCommands(command)
+        .then(function () {
+          expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+          expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+          bytesReceived = [];
+          total += bytesReceived.length
+        });
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command8-zone rgbww/cw hue", function (done) {
+    var calls = [
+      [1, 5],
+      [1, 50],
+      [1, 255],
+      [1, 5, true],
+      [1, 50, true],
+      [1, 255, true]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor8Zone.hue.apply(commands.fullColor8Zone, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command8-zone rgbww/cw saturation", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 50],
+      [1, 100]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor8Zone.saturation.apply(commands.fullColor8Zone, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command8-zone rgbww/cw rgb color", function (done) {
+    var calls = [
+      [1, 255, 255, 255],
+      [1, 0, 0, 0],
+      [1, 255, 100, 0],
+      [1, 255, 0, 100],
+      [1, 0, 255, 100],
+      [1, 0, 100, 255]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor8Zone.rgb.apply(commands.fullColor8Zone, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return Promise.each(command, function(c) {
+          bytesReceived = [];
+          return light.sendCommands(c)
+            .then(function () {
+              expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+              expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+              bytesReceived = [];
+              total += bytesReceived.length
+            })
+        })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the8-zone rgbww/cw command on zone 1", function (done) {
     var test = function(total, commandName) {
       var innerCalls = [
         commands.fullColor8Zone[commandName](1)
@@ -963,7 +1099,108 @@ describe("Testing transmission of control sequences", function () {
       )
     };
     Promise.reduce(
-      ["on", "off"], test, 0
+      ["nightMode", "whiteMode", "on", "off"], test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command8-zone rgbww/cw whiteTemperature", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 50],
+      [1, 100]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor8Zone.whiteTemperature.apply(commands.fullColor8Zone, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the command8-zone rgbww/cw effectMode", function (done) {
+    var calls = [
+      [1, 1],
+      [1, 5],
+      [1, 9]
+    ];
+    var test = function(total, args) {
+      var innerCalls = [
+        commands.fullColor8Zone.effectMode.apply(commands.fullColor8Zone, args)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      calls, test, 0
+    ).catch(function (error) {
+      console.log(error);
+      expect(true).toBe(false)
+    }).finally(function () {
+      done();
+    })
+  });
+
+  it("shall receive the8-zone rgbww/cw command", function (done) {
+    var test = function(total, commandName) {
+      var innerCalls = [
+        commands.fullColor8Zone[commandName](1)
+      ];
+      var innerTest = function(total, command) {
+        expect(command).toBeDefined();
+        return light.sendCommands(command)
+          .then(function () {
+            expect(bytesReceived.length).toBe(light._lastBytesSent.length);
+            expect(JSON.stringify(bytesReceived)).toEqual(JSON.stringify(light._lastBytesSent));
+            bytesReceived = [];
+            total += bytesReceived.length
+          })
+      };
+      return Promise.reduce(
+        innerCalls, innerTest, 0
+      )
+    };
+    Promise.reduce(
+      [/*"allOn", "allOff",*/
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext", "effectModeNext",
+        "effectModeNext", "effectSpeedUp", "effectSpeedDown", "link", "unlink"
+      ], test, 0
     ).catch(function (error) {
       console.log(error);
       expect(true).toBe(false)

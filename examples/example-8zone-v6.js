@@ -10,36 +10,52 @@ var commands = Milight.commandsV6;
 // *  Note, for the V6 command set each command must be provided with a zone parameter as shown in the example below!
 
 var light = new Milight.MilightController({
-    ip: "255.255.255.255",
+    ip: "192.168.178.11",
     type: 'v6'
   }),
   zone = 0;
 
 light.ready().then(function() {
-  light.sendCommands(commands.fullColor8Zone.on(zone));
+  light.sendCommands(commands.fullColor8Zone.on(zone), commands.fullColor8Zone.whiteMode(zone), commands.fullColor8Zone.brightness(zone, 100));
   light.pause(1000);
 
   light.sendCommands(commands.fullColor8Zone.off(zone));
   light.pause(1000);
 
+  // Setting Hue
   light.sendCommands(commands.fullColor8Zone.on(zone));
+  light.pause(1000);
+  for (var x = 0; x < 256; x += 5) {
+    light.sendCommands(commands.fullColor8Zone.hue(zone, x));
+    if (x === 0) {
+      light.sendCommands(commands.fullColor8Zone.brightness(zone, 100))
+    }
+  }
   light.pause(1000);
 
   light.sendCommands(commands.fullColor8Zone.off(zone));
   light.pause(1000);
 
+  // Back to white mode with different color temperatures
   light.sendCommands(commands.fullColor8Zone.on(zone));
+  light.pause(1000);
+  for (var x = 0; x <= 100; x += 1) {
+    light.sendCommands(commands.fullColor8Zone.whiteTemperature(zone, x));
+    if (x === 0) {
+      light.sendCommands(commands.fullColor8Zone.brightness(zone, 100))
+    }
+  }
+  light.pause(1000);
+
+  // Setting Brightness (dimming down)
+  light.sendCommands(commands.fullColor8Zone.on(zone));
+  for (var x = 100; x >= 0; x -= 5) {
+    light.sendCommands(commands.fullColor8Zone.brightness(zone, x));
+  }
   light.pause(1000);
 
   light.sendCommands(commands.fullColor8Zone.off(zone));
   light.pause(1000);
-
-  light.sendCommands(commands.fullColor8Zone.on(zone));
-  light.pause(1000);
-
-  light.sendCommands(commands.fullColor8Zone.off(zone));
-  light.pause(1000);
-
 
   light.close().then(function () {
     console.log("All command have been executed - closing Milight");
@@ -47,4 +63,5 @@ light.ready().then(function() {
   console.log("Invocation of asynchronous Milight commands done");
 }).catch(function(error) {
   console.log(error);
+  light.close();
 });

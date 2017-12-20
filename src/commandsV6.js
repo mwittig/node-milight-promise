@@ -229,13 +229,100 @@ RgbFullColor8ZoneCommand.prototype.off = function(zone) {
   return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x02, 0x00, 0x00, 0x00, zn]
 };
 
+RgbFullColor8ZoneCommand.prototype.whiteMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x05, 0x00, 0x00, 0x00, zn]
+};
+
+// temperature values 0x00 to 0x64 : examples: 00 = 2700K (Warm White), 19 = 3650K, 32 = 4600K, 4B, = 5550K, 64 = 6500K (Cool White)
+RgbFullColor8ZoneCommand.prototype.whiteTemperature = function(zone, temperature) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  var tn = Math.min(Math.max(temperature, 0x00), 0x64);
+  return [0x31, 0x00, 0x00, 0x0a, 0x02, tn, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColor8ZoneCommand.prototype.nightMode = function(zone) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x64, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColor8ZoneCommand.prototype.brightness = function(zone, percent){
+  var bn = Math.min(Math.max(percent, 0x00), 0x64);
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  return [0x31, 0x00, 0x00, 0x0a, 0x04, bn, 0x00, 0x00, 0x00, zn]
+};
+
+// if invertValue is not set, 0 is maximum saturation!
+RgbFullColor8ZoneCommand.prototype.saturation = function(zone, saturationValue, invertValue){
+  var sn = Math.min(Math.max(saturationValue, 0x00), 0x64);
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  if (invertValue) {
+    sn = 0x64 - sn;
+  }
+    return [0x31, 0x00, 0x00, 0x0a, 0x03, sn, 0x00, 0x00, 0x00, zn]
+};
+
+/* Hue range 0-255 [targets last ON() activated bulb(s)] */
+RgbFullColor8ZoneCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x48;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
+  return [0x31, 0x00, 0x00, 0x0a, 0x01, cn, cn, cn, cn, zn]
+};
+
+RgbFullColor8ZoneCommand.prototype.rgb = function(zone, r, g, b) {
+  var hsv=helper.rgbToHsv(r, g, b);
+  return [
+    this.hue(zone, helper.hsvToMilightColor(hsv), true),
+    this.saturation(zone, hsv[1], true),
+    this.brightness(zone, hsv[2])
+  ]
+};
+
+var fc8_modeNext=0x00;
+RgbFullColor8ZoneCommand.prototype.effectMode = function(zone, mode) {
+  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  var mn = Math.min(Math.max(mode, 0x01), 0x09) - 1;
+  fc8_modeNext = mn;
+  return [0x31, 0x00, 0x00, 0x0a, 0x05, mn, 0x00, 0x00, 0x00, zn]
+};
+
+RgbFullColor8ZoneCommand.prototype.effectModeNext = function(zone) {
+  fc8_modeNext += 0x01;
+  if (fc8_modeNext > 0x09) {
+    fc8_modeNext = 0x01;
+  }
+  return [0x31, 0x00, 0x00, 0x0a, 0x05, fc8_modeNext, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColor8ZoneCommand.prototype.effectSpeedUp = function(zone){
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x03, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColor8ZoneCommand.prototype.effectSpeedDown = function(zone){
+  return [0x31, 0x00, 0x00, 0x0a, 0x06, 0x04, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColor8ZoneCommand.prototype.link = function(zone){
+  return [0x3D, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, zone]
+};
+
+RgbFullColor8ZoneCommand.prototype.unlink = function(zone){
+  return [0x3E, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00, zone]
+};
+
 //
 // RGBWW/CW full color
 //
 
 RgbFullColorCommand.prototype.on = function(zone) {
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
-  return [0x31, 0x00, 0x00, 0x08, 0x04,0x01, 0x00, 0x00, 0x00, zn]
+  return [0x31, 0x00, 0x00, 0x08, 0x04, 0x01, 0x00, 0x00, 0x00, zn]
 };
 
 RgbFullColorCommand.prototype.off = function(zone) {
