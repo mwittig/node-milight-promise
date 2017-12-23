@@ -12,7 +12,7 @@ var light = new Milight({
     ip: "255.255.255.255",
     type: 'v6'
   }),
-  zone = 4;
+  zone = 0;
 
 // Start the program right after powering up the bulb.
 // Make sure the bulb has not been linked, yet. Otherwise, you need to unlink the bulb first from the assigned
