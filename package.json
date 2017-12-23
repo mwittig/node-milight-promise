@@ -16,6 +16,7 @@
     "README.md"
   ],
   "scripts": {
+
     "test": "./node_modules/.bin/gulp"
   },
   "homepage": "https://github.com/mwittig/node-milight-promise",

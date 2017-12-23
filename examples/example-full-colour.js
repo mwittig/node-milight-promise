@@ -12,7 +12,7 @@ var light = new Milight.MilightController({
     ip: "255.255.255.255",
     type: 'v6'
   }),
-  zone = 1;
+  zone = 0;
 
 light.ready().then(function() {
   light.sendCommands(commands.fullColor.on(zone), commands.fullColor.whiteMode(zone), commands.fullColor.brightness(zone, 100));
@@ -58,6 +58,7 @@ light.ready().then(function() {
 
   light.close().then(function () {
     console.log("All command have been executed - closing Milight");
+    light.close();
   });
   console.log("Invocation of asynchronous Milight commands done");
 }).catch(function(error) {
