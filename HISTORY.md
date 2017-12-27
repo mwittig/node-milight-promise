@@ -1,5 +1,9 @@
 # Release History
 
+* 20171227, V0.3.0
+    * Added support for 8-zone controller CCT, issue #37
+    * Reduced session timeout to 30 seconds for better compatibility with iBox2, issues #37 & #38
+    * Made session timeout configurable, issue #38
 * 20170929, V0.2.32
     * Added hexToRgb helper function, thanks @msunjic98
 * 20170727, V0.2.31

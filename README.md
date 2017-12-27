@@ -23,7 +23,16 @@ Contributions to the project are  welcome. You can simply fork the project and c
 your contribution to start with. If you like this plugin, please consider &#x2605; starring 
 [the project on github](https://github.com/mwittig/node-milight-promise).
  
-### What's new / Version 0.2.x: Breaking and Notable Changes
+### What's new / Version 0.3.x: Breaking and Notable Changes
+
+Support for using the 8-zone controller with CCT bulbs has been added (thanks to @pauleec & @fghekman for testing). 
+ The 8-zone controller is known to work with current makes of the iBox2 bridge. Presumably, it will also work 
+ with newer makes of iBox1. It did not work with mine, however, which is couple of months old. Note, it is not 
+ possible to pair a CCT bulb with the 4-zone and the 8-zone controller at the same time. As some users reported the 
+ control session becomes invalid with their iBox2 bridge after a few minutes the session timeout has been reduced 
+ to 30 seconds and it is now configurable also.
+
+### Version 0.2.x: Breaking and Notable Changes
 
 So far, synchronization of Milight commands had been performed for each Milight() instance, individually. This caused 
  problems with some applications, which create multiple Milight() instances, for example, to manage different zones. 
