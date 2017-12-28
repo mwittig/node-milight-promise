@@ -59,11 +59,10 @@ ColorRgbwCmd.prototype.allOn  = function(){  return this.on(0) };
 ColorRgbwCmd.prototype.allOff = function(){  return this.off(0) };
 
 /* Hue range 0-255 [targets last ON() activated bulb(s)] */
-ColorRgbwCmd.prototype.hue =  function(decimal)
+ColorRgbwCmd.prototype.hue =  function(value)
 {
-    var hex = decimal.toString(16);
-    hex = (hex.length < 2) ? parseInt('0x0'+hex) : parseInt('0x'+hex);
-    return [0x40,hex,0x55];
+  if (value > 256) value = 255;
+  return [0x40,Number(value),0x55];
 };
 /* Switch to white mode use function parameter `zone` with value '0' to target ALL zones,
  * value '1' for zone 1, value '2' for zone 2,... to 4 */
@@ -166,11 +165,10 @@ WhiteCmd.prototype.cooler = 		function(){ return [0x3F,0x00,0x55] };
 
 ColorRgbCmd.prototype.off = function(){ return [0x21,0x00,0x55] };
 ColorRgbCmd.prototype.on = function(){ return [0x22,0x00,0x55] };
-ColorRgbCmd.prototype.hue = function(decimal)
+ColorRgbCmd.prototype.hue = function(value)
 {
-    var hex = decimal.toString(16);
-    hex = (hex.length < 2) ? parseInt('0x0'+hex) : parseInt('0x'+hex);
-    return [0x20,hex,0x55];
+    if (value > 256) value = 255;
+    return [0x20,Number(value),0x55];
 };
 ColorRgbCmd.prototype.brightUp = 	function(){ return [0x23,0x00,0x55] };
 ColorRgbCmd.prototype.brightDown = 	function(){ return [0x24,0x00,0x55] };
