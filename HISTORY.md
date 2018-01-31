@@ -1,5 +1,8 @@
 # Release History
 
+* 20180131, V0.3.1
+    * Refactored commands for RGB and RGBW hue
+    * Dependency updates
 * 20171227, V0.3.0
     * Added support for 8-zone controller CCT, issue #37
     * Reduced session timeout to 30 seconds for better compatibility with iBox2, issues #37 & #38

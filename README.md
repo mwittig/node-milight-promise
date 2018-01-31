@@ -403,6 +403,6 @@ See [Release History](https://github.com/mwittig/node-milight-promise/blob/maste
 
 ## License 
 
-Copyright (c) 2015-2017, Marcus Wittig and contributors. All rights reserved.
+Copyright (c) 2015-2018, Marcus Wittig and contributors. All rights reserved.
 
 [MIT License](https://github.com/mwittig/node-milight-promise/blob/master/LICENSE)
