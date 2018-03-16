@@ -27,7 +27,7 @@ your contribution to start with. If you like this plugin, please consider &#x260
 
 Support for using the 8-zone controller with CCT bulbs has been added (thanks to @pauleec & @fghekman for testing). 
  The 8-zone controller is known to work with current makes of the iBox2 bridge. Presumably, it will also work 
- with newer makes of iBox1. It did not work with mine, however, which is couple of months old. Note, it is not 
+ with newer makes of iBox1. It did not work with mine, however, which is a couple of months old. Note, it is not 
  possible to pair a CCT bulb with the 4-zone and the 8-zone controller at the same time. As some users reported the 
  control session becomes invalid with their iBox2 bridge after a few minutes the session timeout has been reduced 
  to 30 seconds and it is now configurable also.
