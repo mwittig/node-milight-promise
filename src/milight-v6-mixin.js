@@ -128,18 +128,17 @@ var milightV6Mixin = function() {
                   reject(new Error("no response timeout"))
                 }, (byteArray[0] === 0x80)?250:1000);
                 var messageHandler = function (message, remote) {
-                  if (timeoutId == null) {
-                    return;
+                  if (timeoutId !== null) {
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                    self.remoteAddress = remote.address;
+                    helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
+                    Promise.delay(self.delayBetweenCommands).then(function () {
+                      var result = Array.from(message);
+                      helper.debug('ready for next command');
+                      return resolve(result);
+                    });
                   }
-                  clearTimeout(timeoutId);
-                  timeoutId = null;
-                  self.remoteAddress = remote.address;
-                  helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
-                  Promise.delay(self.delayBetweenCommands).then(function () {
-                    var result = Array.from(message);
-                    helper.debug('ready for next command');
-                    return resolve(result);
-                  });
                 };
                 self.clientSocket.once('message', messageHandler);
               }
