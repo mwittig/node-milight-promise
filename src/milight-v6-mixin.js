@@ -155,6 +155,7 @@ var milightV6Mixin = function() {
         })
       })
     .catch(function(err) {
+      throw err;
     });
   };
 
