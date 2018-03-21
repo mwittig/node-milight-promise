@@ -102,57 +102,60 @@ var milightV6Mixin = function() {
     var buffer = new Buffer(calcChecksum(byteArray)),
       self = this;
 
-    return this._sendRequest = helper.settlePromise(this._sendRequest).then(function () {
+    return this._sendRequest = helper.settlePromise(this._sendRequest)
+      .then(function () {
 
-      return new Promise(function (resolve, reject) {
-        var timeoutId = null;
+        return new Promise(function (resolve, reject) {
+          var timeoutId = null;
 
-        self._createSocket().then(function () {
-          self._lastBytesSent = byteArray;
-          self.clientSocket.send(buffer
-            , 0
-            , buffer.length
-            , self.port
-            , self.ip
-            , function (err, bytes) {
-              if (err) {
-                helper.debug("UDP socket error:" + err);
-                return reject(err);
-              }
-              else {
-                helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
-                timeoutId = setTimeout(function() {
-                  timeoutId = null;
-                  self.clientSocket.removeListener('message', messageHandler);
-                  helper.debug('no response timeout');
-                  reject(new Error("no response timeout"))
-                }, (byteArray[0] === 0x80)?250:1000);
-                var messageHandler = function (message, remote) {
-                  if (timeoutId !== null) {
-                    clearTimeout(timeoutId);
+          self._createSocket().then(function () {
+            self._lastBytesSent = byteArray;
+            self.clientSocket.send(buffer
+              , 0
+              , buffer.length
+              , self.port
+              , self.ip
+              , function (err, bytes) {
+                if (err) {
+                  helper.debug("UDP socket error:" + err);
+                  return reject(err);
+                }
+                else {
+                  helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
+                  timeoutId = setTimeout(function() {
                     timeoutId = null;
-                    self.remoteAddress = remote.address;
-                    helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
-                    Promise.delay(self.delayBetweenCommands).then(function () {
-                      var result = Array.from(message);
-                      helper.debug('ready for next command');
-                      return resolve(result);
-                    });
-                  }
-                };
-                self.clientSocket.once('message', messageHandler);
+                    self.clientSocket.removeListener('message', messageHandler);
+                    helper.debug('no response timeout');
+                    reject(new Error("no response timeout"))
+                  }, (byteArray[0] === 0x80)?250:1000);
+                  var messageHandler = function (message, remote) {
+                    if (timeoutId !== null) {
+                      clearTimeout(timeoutId);
+                      timeoutId = null;
+                      self.remoteAddress = remote.address;
+                      helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
+                      Promise.delay(self.delayBetweenCommands).then(function () {
+                        var result = Array.from(message);
+                        helper.debug('ready for next command');
+                        return resolve(result);
+                      });
+                    }
+                  };
+                  self.clientSocket.once('message', messageHandler);
+                }
               }
+            );
+          }).catch(function (error) {
+            if (timeoutId !== null) {
+              clearTimeout(timeoutId);
+              timeoutId = null;
             }
-          );
-        }).catch(function (error) {
-          if (timeoutId !== null) {
-            clearTimeout(timeoutId);
-            timeoutId = null;
-          }
-          return reject(error);
+            return reject(error);
+          })
         })
       })
-    })
+    .catch(function(err) {
+    });
   };
 
   this._init = function () {
