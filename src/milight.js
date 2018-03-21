@@ -1,3 +1,5 @@
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 var Promise = require('bluebird');
 var dgram = require('dgram');
 var helper = require('./helper');
@@ -10,7 +12,8 @@ const v4Defaults = {
   delayBetweenCommands: 100,
   commandRepeat: 1,
   fullSync: true,
-  type: 'v4'
+  type: 'v4',
+  legacyErrorHandling: false
 };
 const v6Defaults = {
   ip: '255.255.255.255',
@@ -19,7 +22,8 @@ const v6Defaults = {
   commandRepeat: 1,
   fullSync: true,
   sendKeepAlives: true,
-  sessionTimeout: 30000
+  sessionTimeout: 30000,
+  legacyErrorHandling: false
 };
 
 //
@@ -67,8 +71,12 @@ var MilightController = function (options) {
   this._sendRequest = Promise.resolve();
   this._initialized = new Promise(function (resolve, reject) {
     this._createSocket().bind(this).then(this._init).then(resolve).catch(reject)
-  }.bind(this))
+  }.bind(this));
+
+  EventEmitter.call(this)
 };
+
+util.inherits(MilightController, EventEmitter);
 
 //
 // Private member functions
@@ -143,7 +151,15 @@ MilightController.prototype.sendCommands = function (varArgArray) {
         }
         return helper.settlePromises(stackedCommands)
     })
-  })
+  }).catch(function (error) {
+    this.emit("failed", error);
+    if (! this.legacyErrorHandling) {
+      return Promise.reject(error);
+    }
+    else {
+      Promise.resolve()
+    }
+  }.bind(this))
 };
 
 
@@ -162,7 +178,15 @@ MilightController.prototype.pause = function (ms) {
         helper.debug("paused for", ms, "ms")
       });
     })
-  });
+  }).catch(function (error) {
+    this.emit("failed", error);
+    if (! this.legacyErrorHandling) {
+      return Promise.reject(error);
+    }
+    else {
+      Promise.resolve()
+    }
+  }.bind(this));
 };
 
 
