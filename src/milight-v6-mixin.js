@@ -44,7 +44,7 @@ var milightV6Mixin = function() {
         ]).then(function (response) {
           self._sessionId = response.slice(19, 21);
           helper.debug('Session Id: ' + helper.buffer2hex(self._sessionId));
-          Promise.delay(self.delayBetweenCommands).then(function () {
+          return Promise.delay(self.delayBetweenCommands).then(function () {
             resolve(self._sessionId)
           })
         }).catch(function (error) {
