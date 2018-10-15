@@ -286,7 +286,7 @@ RgbFullColor8ZoneCommand.prototype.rgb = function(zone, r, g, b) {
 
 var fc8_modeNext=0x00;
 RgbFullColor8ZoneCommand.prototype.effectMode = function(zone, mode) {
-  var zn = Math.min(Math.max(zone, 0x00), 0x04);
+  var zn = Math.min(Math.max(zone, 0x00), 0x08);
   var mn = Math.min(Math.max(mode, 0x01), 0x09) - 1;
   fc8_modeNext = mn;
   return [0x31, 0x00, 0x00, 0x0a, 0x05, mn, 0x00, 0x00, 0x00, zn]
