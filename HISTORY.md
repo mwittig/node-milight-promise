@@ -1,5 +1,10 @@
 # Release History
-
+* 20190115, V0.3.2
+    * Fixed effect mode command for 8-zone, thanks @Steiger04
+    * Added return to avoid orphan Promise warning, thanks @jbchouinard
+    * Enhanced error handling for sendCommand, issue #26
+    * Added support for node 10
+    * Dependency updates
 * 20180131, V0.3.1
     * Refactored commands for RGB and RGBW hue
     * Dependency updates
