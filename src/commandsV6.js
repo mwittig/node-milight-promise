@@ -137,14 +137,14 @@ RgbwCommand.prototype.effectMode = function(zone, mode) {
   // values 0x01 to 0x09
   var zn = Math.min(Math.max(zone, 0x00), 0x04);
   var mn = Math.min(Math.max(mode, 0x01), 0x09);
-  modeNext = mn;
-  return [0x31, 0x00, 0x00, 0x07, 0x04, mn - 1, 0x00, 0x00, 0x00, zn]
+  modeNext = mn - 1;
+  return [0x31, 0x00, 0x00, 0x07, 0x04, modeNext, 0x00, 0x00, 0x00, zn]
 };
 
 RgbwCommand.prototype.effectModeNext = function(zone) {
   modeNext += 1;
-  if (modeNext > 0x09) {
-    modeNext = 0x01;
+  if (modeNext > 0x08) {
+    modeNext = 0x00;
   }
   return [0x31, 0x00, 0x00, 0x07, 0x04, modeNext, 0x00, 0x00, 0x00, zone]
 };
@@ -178,11 +178,11 @@ RgbwSingeZoneCommand.prototype.off = function() {
 };
 
 RgbwSingeZoneCommand.prototype.whiteMode = function() {
-  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x05, 0x00, 0x00, 0x00, 0x00]
+  return [ /* FIXME: not implemented */ ]
 };
 
 RgbwSingeZoneCommand.prototype.nightMode = function() {
-  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00]
+  return [ /* FIXME: not implemented */ ]
 };
 
 RgbwSingeZoneCommand.prototype.brightness = function(percent){
@@ -191,7 +191,7 @@ RgbwSingeZoneCommand.prototype.brightness = function(percent){
 };
 
 /* Hue range 0-255 [targets last ON() activated bulb(s)] */
-RgbwSingeZoneCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
+RgbwSingeZoneCommand.prototype.hue = function(hue, enableLegacyColorWheel){
   var cn = Math.min(Math.max(hue, 0x00), 0xFF);
   if (enableLegacyColorWheel) {
     cn = (0xFF - cn) - 0x37;
@@ -202,44 +202,44 @@ RgbwSingeZoneCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel)
   return [0x31, 0x00, 0x00, 0x06, 0x01, cn, cn, cn, cn, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.rgb = function(zone, r, g, b) {
+RgbwSingeZoneCommand.prototype.rgb = function(r, g, b) {
   return this.hue(zone, helper.rgbToHue(r, g, b), true)
 };
 
 // deprecated
-RgbwSingeZoneCommand.prototype.rgb255 = function(zone, r, g, b) {
-  return this.rgb(zone, r, g, b);
+RgbwSingeZoneCommand.prototype.rgb255 = function(r, g, b) {
+  return this.rgb(r, g, b);
 };
 
-var modeNext=0x00;
+var sz_modeNext=0x00;
 RgbwSingeZoneCommand.prototype.effectMode = function(mode) {
   // values 0x01 to 0x09
   var mn = Math.min(Math.max(mode, 0x01), 0x09);
-  modeNext = mn - 1;
-  return [0x31, 0x00, 0x00, 0x06, 0x04, modeNext, 0x00, 0x00, 0x00, 0x00]
+  sz_modeNext = mn - 1;
+  return [0x31, 0x00, 0x00, 0x06, 0x04, sz_modeNext, 0x00, 0x00, 0x00, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.effectModeNext = function(zone) {
-  modeNext += 1;
-  if (modeNext > 0x08) {
-    modeNext = 0x00;
+RgbwSingeZoneCommand.prototype.effectModeNext = function() {
+  sz_modeNext += 1;
+  if (sz_modeNext > 0x08) {
+    sz_modeNext = 0x00;
   }
-  return [0x31, 0x00, 0x00, 0x06, 0x04, modeNext, 0x00, 0x00, 0x00, 0x00]
+  return [0x31, 0x00, 0x00, 0x06, 0x04, sz_modeNext, 0x00, 0x00, 0x00, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.effectSpeedUp = function(zone){
+RgbwSingeZoneCommand.prototype.effectSpeedUp = function(){
   return [0x31, 0x00, 0x00, 0x06, 0x03, 0x0b, 0x00, 0x00, 0x00, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.effectSpeedDown = function(zone){
+RgbwSingeZoneCommand.prototype.effectSpeedDown = function(){
   return [0x31, 0x00, 0x00, 0x06, 0x03, 0x0c, 0x00, 0x00, 0x00, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.link = function(zone){
+RgbwSingeZoneCommand.prototype.link = function(){
   return [0x3D, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 };
 
-RgbwSingeZoneCommand.prototype.unlink = function(zone){
+RgbwSingeZoneCommand.prototype.unlink = function(){
   return [0x3E, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 };
 
