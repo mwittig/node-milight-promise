@@ -1,6 +1,7 @@
 var helper = require('./helper.js');
 var BridgeLEDCommands = function(){};
 var RgbwCommand = function(){};
+var RgbwSingeZoneCommand = function(){};
 var WhiteCommand = function(){};
 var RgbFullColorCommand = function(){};
 var RgbFullColor8ZoneCommand = function(){};
@@ -11,6 +12,7 @@ var brightness = 0x32;
 module.exports = {
   bridge: new BridgeLEDCommands(),
   rgbw: new RgbwCommand(),
+  rgbwSingle: new RgbwSingeZoneCommand(),
   white: new WhiteCommand(),
   fullColor: new RgbFullColorCommand(),
   rgb: new RgbCommand(),
@@ -161,6 +163,84 @@ RgbwCommand.prototype.link = function(zone){
 
 RgbwCommand.prototype.unlink = function(zone){
   return [0x3E, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00, zone]
+};
+
+//
+// RGBWW Single Channel (FUT027) commands
+//
+
+RgbwSingeZoneCommand.prototype.on = function() {
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.off = function() {
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x02, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.whiteMode = function() {
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x05, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.nightMode = function() {
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.brightness = function(percent){
+  var bn = Math.min(Math.max(percent, 0x00), 0x64);
+  return [0x31, 0x00, 0x00, 0x06, 0x02, bn, 0x00, 0x00, 0x00, 0x00]
+};
+
+/* Hue range 0-255 [targets last ON() activated bulb(s)] */
+RgbwSingeZoneCommand.prototype.hue = function(zone, hue, enableLegacyColorWheel){
+  var cn = Math.min(Math.max(hue, 0x00), 0xFF);
+  if (enableLegacyColorWheel) {
+    cn = (0xFF - cn) - 0x37;
+    if (cn < 0x00) {
+      cn = 0xFF + cn
+    }
+  }
+  return [0x31, 0x00, 0x00, 0x06, 0x01, cn, cn, cn, cn, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.rgb = function(zone, r, g, b) {
+  return this.hue(zone, helper.rgbToHue(r, g, b), true)
+};
+
+// deprecated
+RgbwSingeZoneCommand.prototype.rgb255 = function(zone, r, g, b) {
+  return this.rgb(zone, r, g, b);
+};
+
+var modeNext=0x00;
+RgbwSingeZoneCommand.prototype.effectMode = function(mode) {
+  // values 0x01 to 0x09
+  var mn = Math.min(Math.max(mode, 0x01), 0x09);
+  modeNext = mn - 1;
+  return [0x31, 0x00, 0x00, 0x06, 0x04, modeNext, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.effectModeNext = function(zone) {
+  modeNext += 1;
+  if (modeNext > 0x08) {
+    modeNext = 0x00;
+  }
+  return [0x31, 0x00, 0x00, 0x06, 0x04, modeNext, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.effectSpeedUp = function(zone){
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x0b, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.effectSpeedDown = function(zone){
+  return [0x31, 0x00, 0x00, 0x06, 0x03, 0x0c, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.link = function(zone){
+  return [0x3D, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+};
+
+RgbwSingeZoneCommand.prototype.unlink = function(zone){
+  return [0x3E, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
 };
 
 //
