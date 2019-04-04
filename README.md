@@ -247,8 +247,8 @@ console.log("Invocation of asynchronous Milight commands done");
 ### Usage Example for v6 Bridge
 
 ```javascript
-var Milight = require('../src/index').MilightController;
-var commands = require('../src/index').commandsV6;
+var Milight = require('node-milight-promise').MilightController;
+var commands = require('node-milight-promise').commandsV6;
 
 // Important Notes:
 // *  Instead of providing the global broadcast address which is the default, you should provide the IP address
@@ -308,7 +308,7 @@ console.log("Invocation of asynchronous Milight commands done");
 ### Usage example for Discovery - Legacy bridges, only
 
 ```javascript
-var discoverBridges = require('../src/index').discoverBridges;
+var discoverBridges = require('node-milight-promise').discoverBridges;
 
 discoverBridges().then(function (results) {
 	console.log(results);
@@ -318,7 +318,7 @@ discoverBridges().then(function (results) {
 ### Usage example for Discovery - All bridges
 
 ```javascript
-var discoverBridges = require('../src/index').discoverBridges;
+var discoverBridges = require('node-milight-promise').discoverBridges;
 
 discoverBridges({
     type: 'all'
