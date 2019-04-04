@@ -99,7 +99,7 @@ var milightV6Mixin = function() {
   };
 
   this._rpcCall = function (byteArray) {
-    var buffer = new Buffer(calcChecksum(byteArray)),
+    var buffer = Buffer.from(calcChecksum(byteArray)),
       self = this;
 
     return this._sendRequest = helper.settlePromise(this._sendRequest).then(function () {

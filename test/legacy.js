@@ -28,7 +28,7 @@ describe("Testing transmission of control sequences", function () {
                 bytesReceived.push(msg[x]);
             }
             if (msg.toString() === Buffer([0x4C, 0x69, 0x6E, 0x6B, 0x5F, 0x57, 0x69, 0x2D, 0x46, 0x69]).toString()) {
-                var message = new Buffer("10.10.10.10,AABBCCDDEEFF");
+                var message = Buffer.from("10.10.10.10,AABBCCDDEEFF");
                 server.send(message, 0, message.length, remote.port, remote.address);
             }
         });

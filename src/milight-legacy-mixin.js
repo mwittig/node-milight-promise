@@ -17,7 +17,7 @@ var milightLegacyMixin = function() {
     if (! (byteArray instanceof Array)) {
       return Promise.reject(new Error("Array argument required"));
     }
-    var buffer = new Buffer(byteArray),
+    var buffer = Buffer.from(byteArray),
       self = this;
 
     return self._sendRequest = helper.settlePromise(self._sendRequest).then(function () {

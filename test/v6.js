@@ -38,15 +38,15 @@ describe("Testing transmission of control sequences", function () {
             0x48, 0x52, 0x45, 0x41,
             0x44
           ]).toString()) {
-          var message = new Buffer("10.10.10.10,AABBCCDDEEFF");
+          var message = Buffer.from("10.10.10.10,AABBCCDDEEFF");
           server.send(message, 0, message.length, remote.port, remote.address);
         }
         else if (msg[0] === 0x80) {
-          var message = new Buffer([0x88,0x00,0x00,0x00,0x03,0x00,0x07,0x00]);
+          var message = Buffer.from([0x88,0x00,0x00,0x00,0x03,0x00,0x07,0x00]);
           server.send(message, 0, message.length, remote.port, remote.address);
         }
         else if (msg[0] === 0x20) {
-          var message = new Buffer([
+          var message = Buffer.from([
             0x28,0x00,0x00,0x00,0x11,0x00,0x02,0xF0,
             0xFE,0x6B,0x16,0xB1,0x50,0x50,0xAA,0x4F,
             0x76,0x00,0x01,0xED,0x01,0x00
@@ -54,7 +54,7 @@ describe("Testing transmission of control sequences", function () {
           server.send(message, 0, message.length, remote.port, remote.address);
         }
         else if (msg[0] === 0xFF) {
-          var message = new Buffer([
+          var message = Buffer.from([
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
           ]);
           server.send(message, 0, message.length, remote.port, remote.address);
