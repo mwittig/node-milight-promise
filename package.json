@@ -48,6 +48,7 @@
     "gulp-replace": "^1.0.0",
     "lodash.flattendeep": "^4.4.0"
   },
-  { "engines" : { "node" : ">=4.5.x" } 
+  "engines" : {
+    "node" : ">=4.5.x"
   }
 }
