@@ -16,7 +16,6 @@
     "README.md"
   ],
   "scripts": {
-
     "test": "./node_modules/.bin/gulp"
   },
   "homepage": "https://github.com/mwittig/node-milight-promise",
@@ -34,21 +33,21 @@
     "LED"
   ],
   "dependencies": {
-    "bluebird": "^3.5.3",
+    "bluebird": "^3.5.5",
     "promise-retryer": "0.0.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "mwittig-gulp-coveralls": "^0.2.1",
-    "gulp-istanbul": "^1.1.2",
+    "gulp-istanbul": "^1.1.3",
     "gulp-jasmine": "^4.0.0",
     "gulp-plumber": "^1.2.1",
-    "gulp-print": "^3.0.0",
-    "gulp-rename": "^1.2.2",
+    "gulp-print": "^5.0.2",
+    "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
     "lodash.flattendeep": "^4.4.0"
   },
-  "engines" : {
-    "node" : ">=4.5.x"
+  "engines": {
+    "node": ">=4.5.x"
   }
 }
