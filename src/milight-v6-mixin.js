@@ -106,7 +106,6 @@ var milightV6Mixin = function() {
 
       var mainPromise;
       return mainPromise = new Promise(function (resolve, reject) {
-        var timeoutId = null;
 
         self._createSocket().then(function () {
           self._lastBytesSent = byteArray;
@@ -122,26 +121,25 @@ var milightV6Mixin = function() {
               }
               else {
                 helper.debug('bytesSent=' + bytes + ', buffer=[' + helper.buffer2hex(buffer) + ']');
-                Promise.delay(byteArray[0] === 0x80 ? 250 : 1000)
+                var timeout = (byteArray[0] === 0x80 ? 250 : 1000) + self.delayBetweenCommands;
+                helper.debug('timeout=' + timeout);
+                Promise.delay(timeout)
                 .then(function() {
-                  if (!mainPromise.isFulfilled) {
+                  helper.debug('mainPromise.isFulfilled: ' + mainPromise.isFulfilled());
+                  if (!mainPromise.isFulfilled()) {
                     self.clientSocket.removeListener('message', messageHandler);
                     helper.debug('no response timeout');
                     reject(new Error("no response timeout"))
                   }
                 });
                 var messageHandler = function (message, remote) {
-                  if (timeoutId !== null) {
-                    clearTimeout(timeoutId);
-                    timeoutId = null;
-                    self.remoteAddress = remote.address;
-                    helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
-                    Promise.delay(self.delayBetweenCommands).then(function () {
-                      var result = Array.from(message);
-                      helper.debug('ready for next command');
-                      return resolve(result);
-                    });
-                  }
+                  self.remoteAddress = remote.address;
+                  helper.debug('bytesReceived=' + message.length + ', buffer=[' + helper.buffer2hex(message) + '], remote=' + remote.address);
+                  Promise.delay(self.delayBetweenCommands).then(function () {
+                    var result = Array.from(message);
+                    helper.debug('ready for next command');
+                    return resolve(result);
+                  });
                 };
                 self.clientSocket.once('message', messageHandler);
               }
