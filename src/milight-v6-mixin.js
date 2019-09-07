@@ -129,7 +129,7 @@ var milightV6Mixin = function() {
                   if (!mainPromise.isFulfilled()) {
                     self.clientSocket.removeListener('message', messageHandler);
                     helper.debug('no response timeout');
-                    reject(new Error("no response timeout"))
+                    resolve("no response timeout")
                   }
                 });
                 var messageHandler = function (message, remote) {
