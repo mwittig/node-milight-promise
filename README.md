@@ -1,6 +1,5 @@
 # node-milight-promise
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/mwittig/node-milight-promise.svg)](https://greenkeeper.io/)
 [![Npm Version](https://badge.fury.io/js/node-milight-promise.svg)](http://badge.fury.io/js/node-milight-promise)
 [![Build Status](https://travis-ci.org/mwittig/node-milight-promise.svg?branch=master)](https://travis-ci.org/mwittig/node-milight-promise)
 [![Dependency Status](https://david-dm.org/mwittig/node-milight-promise.svg)](https://david-dm.org/mwittig/node-milight-promise)
@@ -403,6 +402,6 @@ See [Release History](https://github.com/mwittig/node-milight-promise/blob/maste
 
 ## License 
 
-Copyright (c) 2015-2019, Marcus Wittig and contributors. All rights reserved.
+Copyright (c) 2015-2020, Marcus Wittig and contributors. All rights reserved.
 
 [MIT License](https://github.com/mwittig/node-milight-promise/blob/master/LICENSE)
