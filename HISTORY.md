@@ -1,4 +1,9 @@
 # Release History
+
+* unreleased
+    * Fixed effect mode range for v6 RGBWW which is 0-8 instead of 1-9
+    * Added (experimental) support for FUT027 single zuone RGBWW controller, issue #56
+    * Revised README
 * 20190115, V0.3.2
     * Fixed effect mode command for 8-zone, thanks @Steiger04
     * Added return to avoid orphan Promise warning, thanks @jbchouinard
