@@ -384,7 +384,11 @@ please drop me a link by creating an issue.
   your MiLight (EasyBulb) light bulbs with [Athom Homey](https://www.athom.com)
   
 * [milights-bridge](https://github.com/KevinVR/milights-bridge) - a remote control application for your 
-  Milight lights. It provides a device agnostic Web UI as well as an API for third-party applications.
+  Milight lights. It provides a device agnostic Web UI as well as an API for third-party applications
+  
+* [milights-controller](https://github.com/maltezacharias/milight-controller) - a Milight controller for ha-bridge, an emulator
+  for the Philips Hue light system. Provides an easy to use, dockerized setup which allows for integrating Milight with Alexa or
+  Harmony Hub
 
 ### Articles
 
