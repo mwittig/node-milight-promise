@@ -31,7 +31,7 @@ describe("Testing transmission of control sequences", function () {
         }
       }
       if (sendResponse) {
-        if (msg.toString() === Buffer([
+        if (msg.toString() === Buffer.from([
             0x48, 0x46, 0x2D, 0x41,
             0x31, 0x31, 0x41, 0x53,
             0x53, 0x49, 0x53, 0x54,
