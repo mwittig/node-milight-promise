@@ -3,18 +3,18 @@ var Promise = require('bluebird'),
     helper = require('./helper');
 
 module.exports = function (options) {
-    var options = options || {};
+    options = options || {type: 'all'};
     var port = options.port || 48899;
     var host = options.address || "255.255.255.255";
     var timeout = options.timeout || 3000;
     var discoverLegacy = !options.hasOwnProperty('type') || options.type == 'all' || options.type == 'legacy';
     var discoverV6 = options.type == 'all' || options.type == 'v6';
-    var discoveryMessageLegacy = Buffer([
+    var discoveryMessageLegacy = Buffer.from([
         0x4C, 0x69, 0x6E, 0x6B,
         0x5F, 0x57, 0x69, 0x2D,
         0x46, 0x69
     ]);
-    var discoveryMessageV6 = Buffer([
+    var discoveryMessageV6 = Buffer.from([
         0x48, 0x46, 0x2D, 0x41,
         0x31, 0x31, 0x41, 0x53,
         0x53, 0x49, 0x53, 0x54,
