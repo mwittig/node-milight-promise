@@ -46,7 +46,7 @@
     "gulp-print": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^1.0.0",
-    "lodash.flattendeep": "^4.17.12"
+    "lodash": "^4.17.12"
   },
   "engines" : {
     "node" : ">=4.9.x"
